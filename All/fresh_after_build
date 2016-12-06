@@ -1,0 +1,24 @@
+echo "Checking Git Config..."
+
+NAME_EXISTS=$(git config --global --get user.name; echo $?)
+if [ $NAME_EXISTS -ne 0 ]; then
+	local DEFAULT_NAME
+	case $(uname) in
+	Darwin)
+		DEFAULT_NAME=$(id -F)
+		;;
+	*)
+		DEFAULT_NAME=$(getent passwd "$USER" | cut -d: -f5)
+		;;
+	esac
+	
+	read -ep "Global Git User Name [$DEFAULT_NAME]: " USER_NAME
+	git config --global user.name "${USER_NAME:-$DEFAULT_NAME}"
+fi
+
+
+EMAIL_EXISTS=$(git config --global --get user.email; echo $?)
+if [ $EMAIL_EXISTS -ne 0 ]; then
+	read -ep "Global Git User Email: " USER_EMAIL
+	git config --global user.email "${USER_EMAIL}"
+fi
