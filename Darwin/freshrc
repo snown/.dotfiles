@@ -1,0 +1,4 @@
+if ! [ hash gdircolors 2>/dev/null ]; then
+	mkdir -p $FRESH_BIN_PATH
+	ln -sf $(which gdircolors) "$FRESH_BIN_PATH/dircolors"
+fi

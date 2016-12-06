@@ -1,0 +1,2 @@
+# Use Disk Utility to eject a disk/drive
+alias ejectdisk="diskutil eject "

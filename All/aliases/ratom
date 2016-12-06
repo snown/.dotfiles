@@ -1,0 +1,2 @@
+# Open in remote Atom app
+alias ratom="rmate -p 52699 "

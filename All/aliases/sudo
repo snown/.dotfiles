@@ -1,0 +1,2 @@
+# Allow aliases to use Sudo
+alias sudo="sudo "

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+du -sk "$@" | sort -nr | cut -f2 | sed 's/.*/\"&\"/' | tr "\\n" " " | xargs du -sh

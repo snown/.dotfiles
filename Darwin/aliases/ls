@@ -1,0 +1,2 @@
+# Tell ls to use colors
+alias ls='ls -G'

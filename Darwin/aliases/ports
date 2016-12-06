@@ -1,0 +1,2 @@
+# List what ports are Active and Listening
+alias ports="lsof -i -P | grep LISTEN"

@@ -1,0 +1,2 @@
+# Make sure to include the Fresh shell config file
+source $HOME/.fresh/build/shell.sh

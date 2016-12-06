@@ -1,0 +1,2 @@
+# Tree command defaults
+alias tree="tree -hCF --du "

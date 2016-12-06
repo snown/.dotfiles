@@ -1,0 +1,2 @@
+# Turn pasteboard text into plain text (no styling)
+alias plaintext="pbpaste | pbcopy"

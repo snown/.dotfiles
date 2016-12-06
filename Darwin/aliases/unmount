@@ -1,0 +1,2 @@
+# Use Disk util to unmount
+alias unmount="diskutil unmount "

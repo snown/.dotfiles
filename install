@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+
+# Reset `hash`
+export PATH=$PATH
+
+SCRIPT_DIR=$( cd "$(dirname "$0")" ; pwd -P )
+
+# Make sure env FRESH_LOCAL is set. If not, set to the current directory.
+export FRESH_LOCAL=${FRESH_LOCAL:-$SCRIPT_DIR}
+export FRESH_BIN_PATH=${FRESH_BIN_PATH:-$HOME/.bin}
+
+if ! [ hash fresh 2> /dev/null ] && ! [ -e $HOME/.fresh/source/freshshell/fresh ]; then
+  printf "Installing Fresh\n"
+  git clone https://github.com/freshshell/fresh $HOME/.fresh/source/freshshell/fresh
+fi
+
+
+function setContext () {
+	export CONTEXT_NAME=$1
+	export CONTEXT_DIR="${CONTEXT_NAME}/"
+	export CONTEXT_FULL_DIR="$FRESH_LOCAL/${CONTEXT_NAME}/"
+	
+  echo -e "CONTEXT_NAME=\"${CONTEXT_NAME}\"" >> "${HOME}/.freshrc"
+  echo -e "CONTEXT_DIR=\"\${CONTEXT_NAME}/\"" >> "${HOME}/.freshrc"
+  echo -e "CONTEXT_FULL_DIR=\"\$FRESH_LOCAL/\${CONTEXT_NAME}/\"" >> "${HOME}/.freshrc"
+}
+
+function clearContext () {
+	unset CONTEXT_NAME
+	unset CONTEXT_DIR
+	unset CONTEXT_FULL_DIR
+}
+
+function printGroupCommands () {
+  cat >> "$HOME/.freshrc" <<-'Freshrc-Group-Commands'
+  
+	if [ -d "$CONTEXT_FULL_DIR/bin" ]; then
+	  fresh "$(combinePaths ${CONTEXT_DIR} "bin")/*" --bin
+	fi
+
+	if [ -d "$CONTEXT_FULL_DIR/config_files" ]; then
+	  fresh "$(combinePaths ${CONTEXT_DIR} "config_files")/*" --file
+	fi
+
+	if [ -d "$CONTEXT_FULL_DIR/aliases" ]; then
+		ALIAS_PATH="${CONTEXT_FULL_DIR}aliases/*"
+	  for f in $ALIAS_PATH; do
+			fresh "$(combinePaths ${CONTEXT_DIR} "aliases" $(basename $f))" --file="$HOME/.aliases/$(basename $f)"
+			# fresh $f --file="$HOME/.aliases/$(basename $f)"
+		done
+	fi
+	
+	if [ -d "${CONTEXT_FULL_DIR}/run_commands" ]; then
+		fresh "$(combinePaths ${CONTEXT_DIR} "run_commands")/*"
+	fi
+	
+	Freshrc-Group-Commands
+}
+
+cat > "$HOME/.freshrc" <<-EOD
+
+export FRESH_LOCAL=${FRESH_LOCAL}
+export FRESH_BIN_PATH=${FRESH_BIN_PATH}
+
+function combinePaths () {
+  local count=1
+  local result=""
+  
+  for path in \$*; do
+    if [ \$count -gt 1 ]; then
+      path=\`echo \$path | sed 's/^\/*//'\`
+    fi
+    
+    if [ \$count -lt \$# ]; then
+      path=\`echo \$path | sed 's/\/*$//'\`
+    fi
+    
+    if [[ -z \$result ]]; then
+      result="\$path"
+    else
+      result="\$result/\$path"
+    fi
+    
+    ((count++))
+  done
+  
+  echo \$result
+}
+
+EOD
+
+################################################################################
+# Construct the `freshrc` file                                                 #
+################################################################################
+
+setContext "All"
+
+#
+# All
+#
+
+if [ -d "${SCRIPT_DIR}/All/scripts" ]; then
+	SCRIPT_PATH="${SCRIPT_DIR}/All/scripts/*"
+  for f in $SCRIPT_PATH; do
+      . "$f"
+  done
+fi
+
+cat "${SCRIPT_DIR}/All/freshrc" >> "$HOME/.freshrc"
+
+printGroupCommands
+
+
+#
+# Device Specific
+#
+
+if [ -r "${SCRIPT_DIR}/$(uname)/freshrc" ]; then
+	
+  cat >> "$HOME/.freshrc" <<-'Freshrc-Message'
+
+	#
+	# Commands Specific to $(uname)
+	#
+
+	Freshrc-Message
+
+  setContext $(uname)
+	
+	if [ -d "${SCRIPT_DIR}/$(uname)/scripts" ]; then
+		SCRIPT_PATH="${SCRIPT_DIR}/$(uname)/scripts/*"
+	  for f in $SCRIPT_PATH; do
+	      . "$f"
+	  done
+	fi
+  
+  cat "$SCRIPT_DIR/$(uname)/freshrc" >> "$HOME/.freshrc"
+  
+  printGroupCommands
+
+fi
+
+
+################################################################################
+# Construct the end of the `shell.sh` file                                     #
+################################################################################
+
+mkdir -p "$HOME/.local/bin"
+
+cat >> "$HOME/.freshrc" <<-'POST-SHELL-SH'
+fresh .post-shell-sh
+POST-SHELL-SH
+
+################################################################################
+# Run the Fresh command                                                        #
+################################################################################
+
+$HOME/.fresh/source/freshshell/fresh/bin/fresh
+source "$HOME/.fresh/build/shell.sh"
+
+# Reload the shell
+# exec $SHELL -l

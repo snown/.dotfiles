@@ -1,0 +1,59 @@
+# freshshell.com
+#
+# Examples:
+#
+#   fresh twe4ked/dotfiles shell/functions/\*
+#   fresh jasoncodes/dotfiles shell/aliases/rails.sh
+#   fresh jasoncodes/dotfiles config/tmux.conf --file
+#
+# See http://freshshell.com/readme for documentation.
+
+fresh freshshell/fresh bin/fresh --bin
+
+################################################################################
+# Utilities                                                                    #
+################################################################################
+
+## Encrypt files using public keys from GitHub
+fresh twe4ked/catacomb bin/catacomb --bin
+
+## Echoes a bunch of color codes to the terminal to demonstrate what's available
+fresh pengwynn/dotfiles bin/termcolors --bin
+
+## Test Internet bandwidth using speedtest.net
+fresh sivel/speedtest-cli speedtest_cli.py --bin=$FRESH_BIN_PATH/speedtest
+
+################################################################################
+# Config Files                                                                 #
+################################################################################
+
+# Git Ignore Global
+#
+fresh github/gitignore Global/GPG.gitignore --file="$HOME/.gitignore_global"
+fresh github/gitignore Global/JetBrains.gitignore --file="$HOME/.gitignore_global"
+fresh github/gitignore Global/Vagrant.gitignore --file="$HOME/.gitignore_global"
+fresh github/gitignore Global/VisualStudioCode.gitignore --file="$HOME/.gitignore_global"
+
+fresh github/gitignore Global/macOS.gitignore --file="$HOME/.gitignore_global"
+fresh github/gitignore Global/Xcode.gitignore --file="$HOME/.gitignore_global"
+fresh github/gitignore Global/TextMate.gitignore --file="$HOME/.gitignore_global"
+
+fresh github/gitignore Global/Linux.gitignore --file="$HOME/.gitignore_global"
+
+# Vim
+#
+fresh tpope/vim-sensible plugin/sensible.vim --file=~/.vimrc
+
+################################################################################
+# Terminal                                                                     #
+################################################################################
+# Dir Colors
+#
+fresh seebi/dircolors-solarized dircolors.ansi-universal --file=~/.dircolors
+fresh foobacca/dotfiles bash/dircolors
+
+# Completion
+#
+fresh freshshell/fresh contrib/completion/fresh-completion.bash
+# fresh bobthecow/git-flow-completion git-flow-completion.bash
+
