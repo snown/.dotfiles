@@ -9,58 +9,150 @@ SCRIPT_DIR=$( cd "$(dirname "$0")" ; pwd -P )
 export FRESH_LOCAL=${FRESH_LOCAL:-$SCRIPT_DIR}
 export FRESH_BIN_PATH=${FRESH_BIN_PATH:-$HOME/.bin}
 
+################################################################################
+# Install Fresh if needed                                                      #
+################################################################################
+
 if ! [ hash fresh 2> /dev/null ] && ! [ -e $HOME/.fresh/source/freshshell/fresh ]; then
   printf "Installing Fresh\n"
   git clone https://github.com/freshshell/fresh $HOME/.fresh/source/freshshell/fresh
 fi
 
+################################################################################
+# Functions                                                                    #
+################################################################################
 
-function setContext () {
+function fresh_after_build () {
+  for context in "All" "$(uname)"; do
+    if [ -r "${FRESH_LOCAL}/${context}/fresh_after_build" ]; then
+      source "${FRESH_LOCAL}/${context}/fresh_after_build"
+    fi
+  done
+}
+
+function uniqueElements () {
+  local input_array=( "$@" )
+  local IFS=$'\n'
+  local RESULT=( $(printf '%s\n' ${input_array[@]} | awk '!seen[$0]++') )
+  
+  echo $(declare -p RESULT | sed 's/.*\((.*)\).*/\1/')
+}
+
+function elementsFromFile () {
+  local IFS=$'\n'
+  local RESULT=( $(sed 's/[[:space:]]*#.*// ; s/^[[:space:]]*// ; s/[[:space:]]*$// ; /^$/d' "$1") )
+  
+  echo $(declare -p RESULT | sed "s/^[^(]*\((.*)\)'$/\1/")
+}
+
+function getFileElementsInOrder () {
+  local INPUT="${1}"
+  if [ -d "${INPUT}" ]; then
+    INPUT="${INPUT%/}/*"
+  fi
+  
+  INPUT=$(echo "$INPUT" | sed 's/\/\.\//\//g ; s/\/\{2,\}/\//g ; s/\*\{2,\}$/*/')
+  
+  local ALL_FILES=( "${INPUT}" )
+
+  if [ ${#ALL_FILES[@]} > 0 ] && [ -r "$(dirname "${ALL_FILES[0]}")/.file_order" ]; then
+    local DIRNAME="$(dirname "${ALL_FILES[0]}")"
+    declare -a SPECIFIED_ORDER=$(elementsFromFile "${DIRNAME}/.file_order")
+    SPECIFIED_ORDER=( ${SPECIFIED_ORDER[@]/#/"${DIRNAME}/"} )
+  fi
+
+  echo "$(uniqueElements "${SPECIFIED_ORDER[@]:-}" "${ALL_FILES[@]}")"
+}
+
+# Context Functions
+#-------------------------------------------------------------------------------
+function exportContext () {
 	export CONTEXT_NAME=$1
 	export CONTEXT_DIR="${CONTEXT_NAME}/"
 	export CONTEXT_FULL_DIR="$FRESH_LOCAL/${CONTEXT_NAME}/"
-	
-  echo -e "CONTEXT_NAME=\"${CONTEXT_NAME}\"" >> "${HOME}/.freshrc"
-  echo -e "CONTEXT_DIR=\"\${CONTEXT_NAME}/\"" >> "${HOME}/.freshrc"
-  echo -e "CONTEXT_FULL_DIR=\"\$FRESH_LOCAL/\${CONTEXT_NAME}/\"" >> "${HOME}/.freshrc"
 }
 
-function clearContext () {
+function unsetContext () {
 	unset CONTEXT_NAME
 	unset CONTEXT_DIR
 	unset CONTEXT_FULL_DIR
 }
 
-function printGroupCommands () {
-  cat >> "$HOME/.freshrc" <<-'Freshrc-Group-Commands'
-  
-	if [ -d "$CONTEXT_FULL_DIR/bin" ]; then
-	  fresh "$(combinePaths ${CONTEXT_DIR} "bin")/*" --bin
-	fi
-
-	if [ -d "$CONTEXT_FULL_DIR/config_files" ]; then
-	  fresh "$(combinePaths ${CONTEXT_DIR} "config_files")/*" --file
-	fi
-
-	if [ -d "$CONTEXT_FULL_DIR/aliases" ]; then
-		ALIAS_PATH="${CONTEXT_FULL_DIR}aliases/*"
-	  for f in $ALIAS_PATH; do
-			fresh "$(combinePaths ${CONTEXT_DIR} "aliases" $(basename $f))" --file="$HOME/.aliases/$(basename $f)"
-			# fresh $f --file="$HOME/.aliases/$(basename $f)"
-		done
-	fi
-	
-	if [ -d "${CONTEXT_FULL_DIR}/run_commands" ]; then
-		fresh "$(combinePaths ${CONTEXT_DIR} "run_commands")/*"
-	fi
-	
-	Freshrc-Group-Commands
+function printContext () {
+  echo -e "CONTEXT_NAME=\"${1:-$CONTEXT_NAME}\"" >> "${HOME}/.freshrc"
+  echo -e "CONTEXT_DIR=\"\${CONTEXT_NAME}/\"" >> "${HOME}/.freshrc"
+  echo -e "CONTEXT_FULL_DIR=\"\$FRESH_LOCAL/\${CONTEXT_NAME}/\"" >> "${HOME}/.freshrc"
 }
 
+function addContextToFreshRC () {
+  exportContext $@
+
+  if [ -d "${SCRIPT_DIR}/${CONTEXT_NAME}/install_scripts" ]; then
+    local INSTALL_SCRIPTS
+    declare -a INSTALL_SCRIPTS=$(getFileElementsInOrder "${SCRIPT_DIR}/${CONTEXT_NAME}/install_scripts/*")
+    for f in "${INSTALL_SCRIPTS[@]}"; do
+        source "$f"
+    done
+  fi
+
+  cat >> "$HOME/.freshrc" <<-CONTEXT_HEADER
+
+  ################################################################################
+  # ${CONTEXT_NAME} Context Commands
+  #
+  CONTEXT_NAME="${CONTEXT_NAME}"
+  CONTEXT_DIR="${CONTEXT_NAME}/"
+  CONTEXT_FULL_DIR="\$FRESH_LOCAL/${CONTEXT_NAME}/"
+  ################################################################################
+
+CONTEXT_HEADER
+
+  if [ -r "${SCRIPT_DIR}/${CONTEXT_NAME}/freshrc" ]; then
+    cat "${SCRIPT_DIR}/${CONTEXT_NAME}/freshrc" >> "$HOME/.freshrc"
+  fi
+
+  cat >> "$HOME/.freshrc" <<-'CONTEXT_FRESH_COMMANDS'
+
+  if [ -d "$CONTEXT_FULL_DIR/bin" ]; then
+    fresh "$(combinePaths ${CONTEXT_DIR} "bin")/*" --bin
+  fi
+
+  if [ -d "$CONTEXT_FULL_DIR/config_files" ]; then
+    fresh "$(combinePaths ${CONTEXT_DIR} "config_files")/*" --file
+  fi
+
+  if [ -d "$CONTEXT_FULL_DIR/aliases" ]; then
+    ALIAS_PATH="${CONTEXT_FULL_DIR}aliases/*"
+    for f in $ALIAS_PATH; do
+      fresh "$(combinePaths ${CONTEXT_DIR} "aliases" $(basename $f))" --file="$HOME/.aliases/$(basename $f)"
+      # fresh $f --file="$HOME/.aliases/$(basename $f)"
+    done
+  fi
+
+  if [ -d "${CONTEXT_FULL_DIR}/run_commands" ]; then
+    declare -a RUN_COMMANDS=$(getFileElementsInOrder "$(combinePaths ${CONTEXT_FULL_DIR} "run_commands")/*")
+    for run_command in "${RUN_COMMANDS[@]}"; do
+      echo "$run_command"
+        fresh "$(combinePaths ${CONTEXT_DIR} "run_commands/$(basename "$run_command")")"
+    done
+  fi
+
+CONTEXT_FRESH_COMMANDS
+
+  unsetContext
+}
+
+################################################################################
+# Construct the `freshrc` file                                                 #
+################################################################################
 cat > "$HOME/.freshrc" <<-EOD
 
 export FRESH_LOCAL=${FRESH_LOCAL}
 export FRESH_BIN_PATH=${FRESH_BIN_PATH}
+
+fresh freshshell/fresh bin/fresh --bin
+
+$(declare -f fresh_after_build)
 
 function combinePaths () {
   local count=1
@@ -87,59 +179,21 @@ function combinePaths () {
   echo \$result
 }
 
+$(declare -f uniqueElements)
+
+$(declare -f elementsFromFile)
+
+$(declare -f getFileElementsInOrder)
+
 EOD
 
-################################################################################
-# Construct the `freshrc` file                                                 #
-################################################################################
-
-setContext "All"
-
-#
 # All
 #
+addContextToFreshRC "All"
 
-if [ -d "${SCRIPT_DIR}/All/scripts" ]; then
-	SCRIPT_PATH="${SCRIPT_DIR}/All/scripts/*"
-  for f in $SCRIPT_PATH; do
-      . "$f"
-  done
-fi
-
-cat "${SCRIPT_DIR}/All/freshrc" >> "$HOME/.freshrc"
-
-printGroupCommands
-
-
+# OS Specific Context
 #
-# Device Specific
-#
-
-if [ -r "${SCRIPT_DIR}/$(uname)/freshrc" ]; then
-	
-  cat >> "$HOME/.freshrc" <<-'Freshrc-Message'
-
-	#
-	# Commands Specific to $(uname)
-	#
-
-	Freshrc-Message
-
-  setContext $(uname)
-	
-	if [ -d "${SCRIPT_DIR}/$(uname)/scripts" ]; then
-		SCRIPT_PATH="${SCRIPT_DIR}/$(uname)/scripts/*"
-	  for f in $SCRIPT_PATH; do
-	      . "$f"
-	  done
-	fi
-  
-  cat "$SCRIPT_DIR/$(uname)/freshrc" >> "$HOME/.freshrc"
-  
-  printGroupCommands
-
-fi
-
+addContextToFreshRC "$(uname)"
 
 ################################################################################
 # Construct the end of the `shell.sh` file                                     #
@@ -147,9 +201,11 @@ fi
 
 mkdir -p "$HOME/.local/bin"
 
-cat >> "$HOME/.freshrc" <<-'POST-SHELL-SH'
-fresh .post-shell-sh
-POST-SHELL-SH
+cat >> "$HOME/.freshrc" <<-POST_SHELL_SH
+
+fresh .post-shell-sh --ignore-missing
+
+POST_SHELL_SH
 
 ################################################################################
 # Run the Fresh command                                                        #

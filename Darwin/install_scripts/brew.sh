@@ -42,6 +42,8 @@ brews=(
 	git
 	pacapt
 	coreutils
+  spoof-mac
+  macosvpn
 	
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
@@ -77,6 +79,7 @@ casks=(
 	moom
 	sourcetree
 	webstorm-eap
+  fastlane
 )
 brew cask install ${casks[@]}
 

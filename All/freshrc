@@ -8,8 +8,6 @@
 #
 # See http://freshshell.com/readme for documentation.
 
-fresh freshshell/fresh bin/fresh --bin
-
 ################################################################################
 # Utilities                                                                    #
 ################################################################################

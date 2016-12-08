@@ -15,7 +15,8 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # defaults write -g ApplePressAndHoldEnabled -bool false
 
 # Set a really fast key repeat.
-defaults write NSGlobalDomain KeyRepeat -int 0
+defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain InitialKeyRepeat -int 10
 
 # Run the screensaver if we're in the bottom-left hot corner.
 # defaults write com.apple.dock wvous-bl-corner -int 5
@@ -107,7 +108,10 @@ defaults write NSGlobalDomain AppleMeasurementUnits -string "Inches"
 defaults write NSGlobalDomain AppleMetricUnits -bool false
 
 # Set the timezone; see `sudo systemsetup -listtimezones` for other values
-sudo systemsetup -settimezone "America/Los_Angeles" > /dev/null
+TIME_ZONE="America/Los_Angeles"
+if [[ $(sudo systemsetup -gettimezone | awk -F ': ' '{print $2}') !=  "$TIME_ZONE" ]]; then
+  sudo systemsetup -settimezone "$TIME_ZONE" > /dev/null
+fi
 
 # Disable auto-correct
 #defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false

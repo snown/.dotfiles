@@ -1,0 +1,2 @@
+# Tell grep to use colors
+alias grep='grep --color=auto'
