@@ -1,0 +1,6 @@
+################################################################################
+# macOS defaults dependant on custom resources                                 #
+################################################################################
+
+# Set Font and Color Theme
+defaults write com.apple.dt.xcode XCFontAndColorCurrentTheme -string "Solarized Dark.xccolortheme"

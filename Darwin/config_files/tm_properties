@@ -6,6 +6,9 @@ include             = ".htaccess"
 # Exclude old *.tmproj files.
 exclude             = "{$exclude,*.tmproj}"
 
+# Theme
+theme               = A4299D9B-1DE5-4BC4-87F6-A757E71B1597
+
 # General settings.
 showInvisibles      = false
 spellChecking       = true

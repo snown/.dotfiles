@@ -334,6 +334,16 @@ end tell
 EOD
 
 ###############################################################################
+# Xcode                                                                       #
+###############################################################################
+
+# Show line numbers
+defaults write com.apple.dt.xcode DVTTextShowLineNumbers -bool true
+
+# Show code folding ribbon
+defaults write com.apple.dt.xcode DVTTextShowFoldingSidebar -bool true
+
+###############################################################################
 # Time Machine                                                                #
 ###############################################################################
 

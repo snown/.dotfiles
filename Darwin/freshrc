@@ -1,4 +1,17 @@
+# Symlink gdircolors -> dircolors if needed
+#-------------------------------------------------------------------------------
 if ! [ hash gdircolors 2>/dev/null ]; then
 	mkdir -p $FRESH_BIN_PATH
 	ln -sf $(which gdircolors) "$FRESH_BIN_PATH/dircolors"
 fi
+
+# Install Xcode themes
+#-------------------------------------------------------------------------------
+
+fresh hdoria/xcode-themes . --file=~/Library/Developer/Xcode/UserData/FontAndColorThemes/
+
+# Install Textmate themes
+#-------------------------------------------------------------------------------
+fresh Darwin/other/Themes.tmbundle/info.plist --file="~/Library/Application Support/TextMate/Bundles/Themes.tmbundle/info.plist"
+fresh altercation/solarized "textmate-colors-solarized/Solarized (dark).tmTheme" --file="~/Library/Application Support/TextMate/Bundles/Themes.tmbundle/Themes/Solarized (dark).tmTheme"
+fresh altercation/solarized "textmate-colors-solarized/Solarized (light).tmTheme" --file="~/Library/Application Support/TextMate/Bundles/Themes.tmbundle/Themes/Solarized (light).tmTheme"

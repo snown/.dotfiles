@@ -132,8 +132,7 @@ CONTEXT_HEADER
   if [ -d "${CONTEXT_FULL_DIR}/run_commands" ]; then
     declare -a RUN_COMMANDS=$(getFileElementsInOrder "$(combinePaths ${CONTEXT_FULL_DIR} "run_commands")/*")
     for run_command in "${RUN_COMMANDS[@]}"; do
-      echo "$run_command"
-        fresh "$(combinePaths ${CONTEXT_DIR} "run_commands/$(basename "$run_command")")"
+      fresh "$(combinePaths ${CONTEXT_DIR} "run_commands/$(basename "$run_command")")"
     done
   fi
 
