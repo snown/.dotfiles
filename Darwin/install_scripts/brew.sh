@@ -44,6 +44,7 @@ brews=(
 	coreutils
   spoof-mac
   macosvpn
+  hh
 	
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
