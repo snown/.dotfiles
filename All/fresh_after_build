@@ -1,7 +1,6 @@
 echo "Checking Git Config..."
 
-NAME_EXISTS=$(git config --global --get user.name; echo $?)
-if [ $NAME_EXISTS -ne 0 ]; then
+if [[ "$FRESH_GIT_USERNAME" == "" ]]; then
 	local DEFAULT_NAME
 	case $(uname) in
 	Darwin)
@@ -13,12 +12,13 @@ if [ $NAME_EXISTS -ne 0 ]; then
 	esac
 	
 	read -ep "Global Git User Name [$DEFAULT_NAME]: " USER_NAME
-	git config --global user.name "${USER_NAME:-$DEFAULT_NAME}"
+	FRESH_GIT_USERNAME="${USER_NAME:-$DEFAULT_NAME}"
 fi
 
 
-EMAIL_EXISTS=$(git config --global --get user.email; echo $?)
-if [ $EMAIL_EXISTS -ne 0 ]; then
-	read -ep "Global Git User Email: " USER_EMAIL
-	git config --global user.email "${USER_EMAIL}"
+if [[ "$FRESH_GIT_EMAIL" == "" ]]; then
+	read -ep "Global Git User Email: " FRESH_GIT_EMAIL
 fi
+
+git config --global user.name "$FRESH_GIT_USERNAME"
+git config --global user.email "$FRESH_GIT_EMAIL"

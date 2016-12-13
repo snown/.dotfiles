@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+export FRESH_GIT_USERNAME="$(git config --global --get user.name)"
+export FRESH_GIT_EMAIL="$(git config --global --get user.email)"

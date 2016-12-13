@@ -1,3 +1,6 @@
+if [ -r "$HOME/.profile" ]; then
+  source ~/.profile
+fi
 
 # Configure `hh` for Bash
 #-------------------------------------------------------------------------------
@@ -10,3 +13,6 @@ export PROMPT_COMMAND="history -a; history -n; ${PROMPT_COMMAND}"   # mem/file s
 # if this is interactive shell, then bind hh to Ctrl-r (for Vi mode check doc)
 if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hh -- \C-j"'; fi
 
+# Add brew installed Bash Completions
+#------------------------------------------------------------------------------
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion

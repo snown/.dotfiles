@@ -16,7 +16,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Set a really fast key repeat.
 defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
 # Run the screensaver if we're in the bottom-left hot corner.
 # defaults write com.apple.dock wvous-bl-corner -int 5
@@ -314,6 +314,13 @@ tell application "Terminal"
 	do shell script "open '$CONTEXT_FULL_DIR/terminal_themes/" & themeName & ".terminal'"
 	(* Wait a little bit to ensure that the custom theme is added. *)
 	delay 1
+    
+    (* Theme customization *)
+    set font name of (settings set themeName) to "MonoidNerdFontComplete---Regular"
+    --set font size of (settings set themeName) to 11
+    --set number of rows of (settings set themeName) to 24
+    --set number of columns of (settings set themeName) to 80
+    
 	(* Set the custom theme as the default terminal theme. *)
 	set default settings to settings set themeName
 	(* Get the IDs of all the currently opened terminal windows. *)
@@ -328,6 +335,7 @@ tell application "Terminal"
 		   theme to be applied. *)
 		else
 			set current settings of tabs of (every window whose id is windowID) to settings set themeName
+			set font name of 
 		end if
 	end repeat
 end tell

@@ -2,8 +2,8 @@
 
 # Install homebrew if it isn't already installed
 if ! hash brew 2> /dev/null; then
-  echo "Installing Homebrew..."
-  ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	echo "Installing Homebrew..."
+	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
 # Use latest package definitions
@@ -16,20 +16,26 @@ brew upgrade
 
 # Install Custom Taps
 echo "Tapping kegs..."
-brew tap thoughtbot/formulae
-brew tap homebrew/versions
-brew tap caskroom/versions
-brew tap caskroom/fonts
+kegs=(
+	thoughtbot/formulae
+	homebrew/versions
+	caskroom/versions
+	caskroom/fonts
+	neovim/neovim
+)
+brew tap ${kegs[@]}
 
 # Install essential homebrews
 echo "Pouring brews..."
 brews=(
+	bash
 	python
-	ruby
+	python3
+	"ruby --with-doc"
 	ssh-copy-id
 	the_silver_searcher
 	tree
-	wget
+	"wget --with-pcre"
 	pandoc
 	rhash
 	multimarkdown
@@ -39,17 +45,25 @@ brews=(
 	unrar
 	mas
 	bash-completion
-	git
+	"git --with-pcre"
 	pacapt
-	coreutils
-  spoof-mac
-  macosvpn
-  hh
-	
+	"coreutils --with-gmp"
+	findutils
+	spoof-mac
+	macosvpn
+	hh
+	neovim
+	fontforge
+	rename
+	tor
+
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
 )
 brew install ${brews[@]}
+
+# Add newly installed GNU `find` in PATH as `find`
+ln -sf /usr/local/bin/gfind "${FRESH_BIN_PATH:-$HOME/.bin}/find"
 
 
 # Install essential casks
@@ -65,6 +79,7 @@ casks=(
 	trim-enabler
 	atom
 	gpgtools
+	xquartz
 	inkscape
 	keka
 	lingon-x
@@ -80,40 +95,9 @@ casks=(
 	moom
 	sourcetree
 	webstorm-eap
-  fastlane
+	fastlane
 )
 brew cask install ${casks[@]}
-
-echo "Installing from Mac App Store"
-brew install mas
-macapps=(
-	443987910 # 1Password
-	413965349 # Soulver
-	412797403 # CocoaColor
-	403388562 # Transmit
-	409201541 # Pages
-	409183694 # Keynote
-	409203825 # Numbers
-	411643860 # DaisyDisk
-	497799835 # Xcode
-)
-mas signin --dialog snown27@gmail.com
-screen -S mas -dm mas install ${macapps[@]}
-
-# FONTS
-echo "Installing fonts..."
-fonts=(
-  source-sans-pro
-  input
-  roboto
-	fira-code
-	fontawesome
-	consolas-for-powerline
-	droid-sans
-	droid-sans-mono
-	menlo-for-powerline
-)
-brew cask install ${fonts[@] /#/font-} # Prefix each font wit "font-" ## http://stackoverflow.com/a/13216833
 
 # Remove outdated versions from the Cellar
 echo "Performing brew cleanup..."

@@ -40,7 +40,12 @@ fresh github/gitignore Global/Linux.gitignore --file="$HOME/.gitignore_global"
 
 # Vim
 #
-fresh tpope/vim-sensible plugin/sensible.vim --file=~/.vimrc
+fresh All/other/vimrc --file="$HOME/.config/nvim/init.vim"
+fresh junegunn/vim-plug plug.vim --file="$HOME/.config/nvim/autoload/plug.vim"
+
+# SSH
+# 
+fresh All/other/ssh.config --file="$HOME/.ssh/config"
 
 ################################################################################
 # Terminal                                                                     #

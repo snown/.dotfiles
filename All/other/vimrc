@@ -1,0 +1,259 @@
+if has("mac") || has("macunix")
+	let g:python2_host_prog = '/usr/local/bin/python22'
+	let g:python3_host_prog = '/usr/local/bin/python3'
+endif
+
+call plug#begin()
+Plug 'tpope/vim-sensible'
+
+Plug 'sirver/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'altercation/vim-colors-solarized'
+Plug 'tpope/vim-fugitive'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-surround'
+Plug 'terryma/vim-multiple-cursors'
+
+" On demand loading
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'scrooloose/syntastic', { 'on': 'SyntasticToggle', 'for': ['objc', 'objcpp', 'sh', 'json', 'javascript', 'dockerfile'] }
+Plug 'suan/vim-instant-markdown', { 'for': 'markdown' }
+
+call plug#end()
+
+" UltiSnips Config
+let g:UltiSnipsExpandTrigger="<TAB>"
+
+" Set the local current directory to the open file's path
+autocmd BufEnter * silent! lcd %:p:h
+
+" An example for a vimrc file.
+"
+" To use it, copy it to
+"	  for Unix:		$HOME/.config/nvim/init.vim
+"	  for Windows:	%LOCALAPPDATA%\nvim\init.vim
+
+set showcmd			   " display incomplete commands
+
+" Setup vim backups, undo, and swap settings
+let vimDir = '$HOME/.config/nvim/'
+:silent call system('mkdir -p ' . vimDir . '.undo//')
+:silent call system('mkdir -p ' . vimDir . '.backup//')
+:silent call system('mkdir -p ' . vimDir . '.swp//')
+
+let &undodir = expand(vimDir . '.undo//')
+let &backupdir = expand(vimDir . '.backup//')
+let &directory = expand(vimDir . '.swp//')
+
+set backup			   " keep a backup file (restore to previous version)
+set undofile		   " keep an undo file (undo changes after closing)
+
+" Switch syntax highlighting on
+syntax on
+
+" Theme
+"set background=dark
+"colorscheme solarized
+
+" Also switch on highlighting the last used search pattern.
+set hlsearch
+
+" I like highlighting strings inside C comments.
+let c_comment_strings=1
+
+" Enable file type detection.
+" Use the default filetype settings, so that mail gets 'textwidth' set to 72,
+" 'cindent' is on in C files, etc.
+" Also load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
+
+" Put these in an autocmd group, so that we can delete them easily.
+augroup vimrcEx
+  autocmd!
+
+  " For all text files set 'textwidth' to 78 characters.
+  autocmd FileType text setlocal textwidth=78
+
+  " When editing a file, always jump to the last known cursor position.
+  " Don't do it when the position is invalid or when inside an event handler
+  autocmd BufReadPost *
+	\ if line("'\"") >= 1 && line("'\"") <= line("$") |
+	\	execute "normal! g`\"" |
+	\ endif
+
+augroup END
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+if !exists(":DiffOrig")
+	command DiffOrig vert new | set buftype=nofile | read ++edit # | 0d_ | diffthis
+				\ | wincmd p | diffthis
+endif
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = ","
+let g:mapleader = ","
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Height of the command bar
+set cmdheight=2
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases 
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" show the cursor position all the time
+set ruler
+
+" Show line numbers
+set number
+
+" Keep 5 lines below cursor available at all times
+set scrolloff=5
+
+" Status Line
+" -----------------------------------------------------------------------------
+
+" Always show the Status line
+set laststatus=2
+
+" Enable powerline mode of airline status bar config
+let g:airline_powerline_fonts=1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
+"set expandtab
+
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 4 spaces
+set shiftwidth=2
+set tabstop=2
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+" File specifric tab settings
+"------------------------------------------------------------------------------
+
+" Javascript
+autocmd Filetype javascript setlocal ts=2 sw=2 sts=2 expandtab
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Visual mode related
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Useful mappings for managing tabs
+map <leader>tn :tabnewA<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Mappings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Toggle Comments - Alt+/
+nmap ÷ gcc
+vmap ÷ gc
+
+" Don't use Ex mode, use Q for formatting
+noremap Q gq
+
+" CTRL-U in insert mode deletes a lot.	Use CTRL-G u to first break undo,
+" so that you can undo CTRL-U after inserting a line break.
+inoremap <C-U> <C-G>u<C-U>
+
+" Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
+"nmap <M-j> mz:m+<cr>`z
+"nmap <M-k> mz:m-2<cr>`z
+"vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+"vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+"
+if has("mac") || has("macunix")
+"  nmap <D-j> <M-j>
+"  nmap <D-k> <M-k>
+"  vmap <D-j> <M-j>
+"  vmap <D-k> <M-k>
+
+" Next tab with  OPT+SHIFT+]
+nmap ’ :tabnext<CR> 
+" Previous tab with  OPT+SHIFT+]
+nmap ” :tabprevious<CR>
+
+" Close tab with  OPT+w-t
+nmap ∑t :tabclose<CR>
+" Close window with  OPT+w-w
+nmap ∑w :q<CR>
+
+" Save document with  OPT+s
+nmap Í :w 
+" 'Save as...' with  OPT+SHIFT+s
+nmap ß :w<CR>
+
+nmap <C-e> $
+nmap <C-a> 0
+endif
+
+" Delete trailing white space on save, useful for Python and CoffeeScript ;)
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+autocmd BufWrite *.coffee :call DeleteTrailingWS()
+
+
+hi clear CursorLine
+augroup CLClear
+	autocmd! ColorScheme * hi clear CursorLine
+augroup END
+
+hi CursorLineNR cterm=bold
+augroup CLNRSet
+	autocmd! ColorScheme * hi CursorLineNR cterm=bold
+augroup END

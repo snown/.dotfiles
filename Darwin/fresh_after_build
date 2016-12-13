@@ -4,3 +4,9 @@
 
 # Set Font and Color Theme
 defaults write com.apple.dt.xcode XCFontAndColorCurrentTheme -string "Solarized Dark.xccolortheme"
+
+################################################################################
+# Update NeoVIM with python engine
+################################################################################
+pip2 install neovim --upgrade
+pip3 install neovim --upgrade
