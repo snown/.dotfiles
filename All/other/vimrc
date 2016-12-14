@@ -24,7 +24,7 @@ Plug 'suan/vim-instant-markdown', { 'for': 'markdown' }
 call plug#end()
 
 " UltiSnips Config
-let g:UltiSnipsExpandTrigger="<TAB>"
+let g:UltiSnipsExpandTrigger="<M-TAB>"
 
 " Set the local current directory to the open file's path
 autocmd BufEnter * silent! lcd %:p:h
@@ -188,7 +188,7 @@ vnoremap <silent> # :call VisualSelection('b')<CR>
 " => Moving around, tabs, windows and buffers
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Useful mappings for managing tabs
-map <leader>tn :tabnewA<cr>
+map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
@@ -197,8 +197,8 @@ map <leader>tm :tabmove
 " => Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Toggle Comments - Alt+/
-nmap ÷ gcc
-vmap ÷ gc
+nmap <M-/> gcc
+vmap <M-/> gc
 
 " Don't use Ex mode, use Q for formatting
 noremap Q gq
@@ -220,19 +220,19 @@ if has("mac") || has("macunix")
 "  vmap <D-k> <M-k>
 
 " Next tab with  OPT+SHIFT+]
-nmap ’ :tabnext<CR> 
+nmap <M-}> :tabnext<CR> 
 " Previous tab with  OPT+SHIFT+]
-nmap ” :tabprevious<CR>
+nmap <M-{> :tabprevious<CR>
 
 " Close tab with  OPT+w-t
-nmap ∑t :tabclose<CR>
+nmap <M-w>t :tabclose<CR>
 " Close window with  OPT+w-w
-nmap ∑w :q<CR>
+nmap <M-w>w :q<CR>
 
 " Save document with  OPT+s
-nmap Í :w 
+nmap <M-s> :w<CR> 
 " 'Save as...' with  OPT+SHIFT+s
-nmap ß :w<CR>
+nmap <M-S> :w
 
 nmap <C-e> $
 nmap <C-a> 0

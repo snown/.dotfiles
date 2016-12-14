@@ -1,3 +1,17 @@
+# Symlink gdircolors -> dircolors if needed
+#-------------------------------------------------------------------------------
+if ! [ hash gdircolors 2>/dev/null ]; then
+	mkdir -p $FRESH_BIN_PATH
+	ln -sf $(which gdircolors) "$FRESH_BIN_PATH/dircolors"
+fi
+
+# Symlink gfind -> find if needed
+#-------------------------------------------------------------------------------
+if ! [ hash gfind 2>/dev/null ]; then
+	mkdir -p $FRESH_BIN_PATH
+	ln -sf $(which gfind) "$FRESH_BIN_PATH/find"
+fi
+
 ################################################################################
 # macOS defaults dependant on custom resources                                 #
 ################################################################################
@@ -10,3 +24,72 @@ defaults write com.apple.dt.xcode XCFontAndColorCurrentTheme -string "Solarized 
 ################################################################################
 pip2 install neovim --upgrade
 pip3 install neovim --upgrade
+
+################################################################################
+# Set Terminal to use Option as Meta key
+################################################################################
+
+BUILD_THEME="$FRESH_PATH/build/theme.terminal"
+THEME_NAME="$(/usr/libexec/PlistBuddy -c "Print :name" "$BUILD_THEME")"
+THEME_EXISTS=$(osascript <<EOD
+tell application "Terminal"
+	try
+		settings set "$THEME_NAME"
+		0 -- Return 0 to indicate success (Unix convension), or "Theme exists"
+	on error
+    1 -- Return 1 to indicate failure (Unix convension), or "Theme does not exist"
+	end try
+end tell
+EOD
+)
+
+if ! [ $THEME_EXISTS -eq 0 ]; then
+  THEME_PATH="/tmp/terminal_theme/$THEME_NAME.terminal"
+  mkdir -p "/tmp/terminal_theme"
+  cp "$BUILD_THEME" "$THEME_PATH"
+  chmod a+rw "$THEME_PATH"
+
+  /usr/libexec/PlistBuddy -c "Add :useOptionAsMetaKey bool" "$THEME_PATH" 
+  /usr/libexec/PlistBuddy -c "Set :useOptionAsMetaKey true" "$THEME_PATH" 
+
+  # Use a modified version of the Solarized Dark theme by default in Terminal.app
+  osascript <<EOD
+tell application "Terminal"
+	local allOpenedWindows
+	local initialOpenedWindows
+	local windowID
+	set themeName to "$THEME_NAME"
+	(* Store the IDs of all the open terminal windows. *)
+	set initialOpenedWindows to id of every window
+	(* Open the custom theme so that it gets added to the list
+	   of available terminal themes (note: this will open two
+	   additional terminal windows). *)
+	do shell script "open '$THEME_PATH'"
+	(* Wait a little bit to ensure that the custom theme is added. *)
+	delay 1
+    
+    (* Theme customization *)
+    set font name of (settings set themeName) to "MonoidNerdFontComplete---Regular"
+    --set font size of (settings set themeName) to 11
+    --set number of rows of (settings set themeName) to 24
+    --set number of columns of (settings set themeName) to 80
+    
+	(* Set the custom theme as the default terminal theme. *)
+	set default settings to settings set themeName
+	(* Get the IDs of all the currently opened terminal windows. *)
+	set allOpenedWindows to id of every window
+	repeat with windowID in allOpenedWindows
+		(* Close the additional windows that were opened in order
+		   to add the custom theme to the list of terminal themes. *)
+		if initialOpenedWindows does not contain windowID then
+			close (every window whose id is windowID)
+		(* Change the theme for the initial opened terminal windows
+		   to remove the need to close them in order for the custom
+		   theme to be applied. *)
+		else
+			set current settings of tabs of (every window whose id is windowID) to settings set themeName
+		end if
+	end repeat
+end tell
+EOD
+fi
