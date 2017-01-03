@@ -12,3 +12,7 @@ fresh altercation/solarized "textmate-colors-solarized/Solarized (light).tmTheme
 # Link Terminal Themes to Build Directory
 #-------------------------------------------------------------------------------
 fresh altercation/solarized "osx-terminal.app-colors-solarized/xterm-256color/Solarized Dark xterm-256color.terminal" --file=theme.terminal
+
+# Install Solarized Color Palette
+#------------------------------------------------------------------------------
+fresh altercation/solarized "apple-colorpalette-solarized/solarized.clr" --file="~/Library/Colors/Solarized.clr"

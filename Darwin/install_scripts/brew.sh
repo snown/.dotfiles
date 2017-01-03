@@ -56,6 +56,8 @@ brews=(
 	fontforge
 	rename
 	tor
+	wdiff
+	editorconfig
 
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
@@ -96,6 +98,8 @@ casks=(
 	sourcetree
 	webstorm-eap
 	fastlane
+	sqlitebrowser
+	resilio-sync
 )
 brew cask install ${casks[@]}
 

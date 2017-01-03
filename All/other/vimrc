@@ -6,6 +6,7 @@ endif
 call plug#begin()
 Plug 'tpope/vim-sensible'
 
+Plug 'editorconfig/editorconfig-vim'
 Plug 'sirver/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vim-airline/vim-airline'
@@ -54,8 +55,8 @@ set undofile		   " keep an undo file (undo changes after closing)
 syntax on
 
 " Theme
-"set background=dark
-"colorscheme solarized
+set background=dark
+colorscheme solarized
 
 " Also switch on highlighting the last used search pattern.
 set hlsearch
@@ -175,6 +176,9 @@ set wrap "Wrap lines
 
 " Javascript
 autocmd Filetype javascript setlocal ts=2 sw=2 sts=2 expandtab
+
+" Makefiles
+autocmd Filetype make setlocal ts=4 sw=4 sts=4 noexpandtab
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Visual mode related

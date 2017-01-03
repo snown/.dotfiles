@@ -29,6 +29,15 @@ pip3 install neovim --upgrade
 # Set Terminal to use Option as Meta key
 ################################################################################
 
+function setPlistDataProperty () {
+	local keypath="$1"
+	local value="$2"
+	local plist="$3"
+
+	plutil -remove "$keypath" "$plist" &> /dev/null || true
+	plutil -insert "$keypath" -data "$value" "$plist"
+}
+
 BUILD_THEME="$FRESH_PATH/build/theme.terminal"
 THEME_NAME="$(/usr/libexec/PlistBuddy -c "Print :name" "$BUILD_THEME")"
 THEME_EXISTS=$(osascript <<EOD
@@ -49,8 +58,31 @@ if ! [ $THEME_EXISTS -eq 0 ]; then
   cp "$BUILD_THEME" "$THEME_PATH"
   chmod a+rw "$THEME_PATH"
 
-  /usr/libexec/PlistBuddy -c "Add :useOptionAsMetaKey bool" "$THEME_PATH" 
-  /usr/libexec/PlistBuddy -c "Set :useOptionAsMetaKey true" "$THEME_PATH" 
+	# Make Terminal treat <OPTION> as the <M> key for vim key commands
+	/usr/libexec/PlistBuddy "$THEME_PATH" &> /dev/null <<-MOD
+	Add :useOptionAsMetaKey bool
+	Set :useOptionAsMetaKey true
+	Save
+	Exit
+	MOD
+
+	# Add Solorized colors as the terminal's ansi colors
+	setPlistDataProperty ANSIBlackColor "$(generate-terminal-color -c "#073642")" "$THEME_PATH"
+	setPlistDataProperty ANSIRedColor "$(generate-terminal-color -c "#dc322f")" "$THEME_PATH"
+	setPlistDataProperty ANSIGreenColor "$(generate-terminal-color -c "#859900")" "$THEME_PATH"
+	setPlistDataProperty ANSIYellowColor "$(generate-terminal-color -c "#b58900")" "$THEME_PATH"
+	setPlistDataProperty ANSIBlueColor "$(generate-terminal-color -c "#268bd2")" "$THEME_PATH"
+	setPlistDataProperty ANSIMagentaColor "$(generate-terminal-color -c "#d33682")" "$THEME_PATH"
+	setPlistDataProperty ANSICyanColor "$(generate-terminal-color -c "#2aa198")" "$THEME_PATH"
+	setPlistDataProperty ANSIWhiteColor "$(generate-terminal-color -c "#eee8d5")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightBlackColor "$(generate-terminal-color -c "#002b36")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightRedColor "$(generate-terminal-color -c "#cb4b16")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightGreenColor "$(generate-terminal-color -c "#586e75")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightYellowColor "$(generate-terminal-color -c "#657b83")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightBlueColor "$(generate-terminal-color -c "#839496")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightMagentaColor "$(generate-terminal-color -c "#6c71c4")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightCyanColor "$(generate-terminal-color -c "#93a1a1")" "$THEME_PATH"
+	setPlistDataProperty ANSIBrightWhiteColor "$(generate-terminal-color -c "#fdf6e3")" "$THEME_PATH"
 
   # Use a modified version of the Solarized Dark theme by default in Terminal.app
   osascript <<EOD
@@ -93,3 +125,5 @@ tell application "Terminal"
 end tell
 EOD
 fi
+
+# vim: set ft=sh
