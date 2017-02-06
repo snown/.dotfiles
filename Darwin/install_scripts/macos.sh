@@ -406,6 +406,9 @@ echo -e "\e[34m==>\e[m Terminal"
 # Only use UTF-8 in Terminal.app
 defaults write com.apple.terminal StringEncodings -array 4
 
+# Don't show Marks ('[' and ']' at the begininning and end of prompts)
+defaults write com.apple.terminal ShowLineMarks -bool false
+
 # Terminal theme is set after `fresh` as all files need to be in place
 
 ###############################################################################

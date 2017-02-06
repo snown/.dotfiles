@@ -50,6 +50,10 @@ fresh All/other/ssh.config --file="$HOME/.ssh/config"
 ################################################################################
 # Terminal                                                                     #
 ################################################################################
+# Liquid Prompt
+#
+fresh nojhan/liquidprompt liquidprompt --file=$HOME/.include/liquidprompt
+
 # Dir Colors
 #
 fresh seebi/dircolors-solarized dircolors.ansi-universal --file=~/.dircolors

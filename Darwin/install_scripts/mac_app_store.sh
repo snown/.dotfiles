@@ -11,6 +11,7 @@ macapps=(
 	409183694 # Keynote
 	409203825 # Numbers
 	411643860 # DaisyDisk
+  924726344 # Deliveries
 	497799835 # Xcode
 )
 mas signin --dialog snown27@gmail.com

@@ -58,6 +58,7 @@ brews=(
 	tor
 	wdiff
 	editorconfig
+	gibo
 
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
@@ -100,6 +101,8 @@ casks=(
 	fastlane
 	sqlitebrowser
 	resilio-sync
+	fontforge
+	docker
 )
 brew cask install ${casks[@]}
 
