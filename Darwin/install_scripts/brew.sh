@@ -17,11 +17,11 @@ brew upgrade
 # Install Custom Taps
 echo "Tapping kegs..."
 kegs=(
-	thoughtbot/formulae
-	homebrew/versions
-	caskroom/versions
-	caskroom/fonts
-	neovim/neovim
+	"thoughtbot/formulae"
+	"homebrew/versions"
+	"caskroom/versions"
+	"caskroom/fonts"
+	"neovim/neovim"
 )
 brew tap ${kegs[@]}
 
