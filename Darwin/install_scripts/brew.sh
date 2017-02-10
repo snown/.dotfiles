@@ -23,7 +23,9 @@ kegs=(
 	"caskroom/fonts"
 	"neovim/neovim"
 )
-brew tap ${kegs[@]}
+for keg in ${kegs[@]}; do
+	brew tap "$keg"
+done
 
 # Install essential homebrews
 echo "Pouring brews..."
