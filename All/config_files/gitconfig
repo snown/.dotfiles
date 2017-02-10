@@ -40,6 +40,7 @@
 	diffr = "!f() { git diff "$1"^.."$1"; }; f"
 	diffs = diff --staged
 	squash = "!f() { git reset --soft HEAD~$1 && git commit --edit -m\"$(git log --format=\"#  Commit: %h%n%B\" --reverse HEAD..HEAD@{1})\"; }; f"
+	ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
