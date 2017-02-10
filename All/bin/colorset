@@ -1,0 +1,118 @@
+#!/usr/bin/env bash
+
+function setColor {
+	local wasReset=false
+	local returnString="\e["
+	while ! ${2:+false}; do
+		case ${1##*-} in
+			reset)
+				echo -en "\e[m"
+				wasReset=true
+				break
+				;;
+			setaf|f)
+				if [ $2 == "default" ]; then
+					returnString="${returnString}39;"
+				else
+					returnString="${returnString}38;5;$(mapColorname $2);"
+				fi
+				;;
+			setab|b)
+				if [ $2 == "default" ]; then
+					returnString="${returnString}49;"
+				else
+					returnString="${returnString}48;5;$(mapColorname $2);"
+				fi
+				;;
+			format|misc|o)
+				case $2 in
+					default)
+						returnString="${returnString}0;"
+						;;
+					bold|bright)
+						returnString="${returnString}1;"
+						;;
+					dim)
+						returnstring="${returnString}2;"
+						;;
+					smul|underline)
+						returnString="${returnString}4;"
+						;;
+					blink)
+						returnString="${returnString}5;"
+						;;
+					rev|reverse)
+						returnString="${returnString}7;"
+						;;
+					invis|invisible)
+						returnString="${returnString}8;"
+				esac
+		esac
+		shift 2
+	done
+
+	if [ "${1#--}" == "reset" ]; then
+		echo -en "\e[m"
+	elif [ "$wasReset" == false ]; then
+		echo -en "${returnString%;}m"
+	fi
+}
+
+function mapColorname {
+	local num
+	case $1 in
+		black)
+			num=0
+			;;
+		red)
+			num=1
+			;;
+		green)
+			num=2
+			;;
+		orange)
+			num=3
+			;;
+		blue)
+			num=4
+			;;
+		magenta)
+			num=5
+			;;
+		cyan)
+			num=6
+			;;
+		grey|gray)
+			num=7
+			;;
+		darkgrey|darkgray)
+			num=8
+			;;
+		ltred|lightred)
+			num=9
+			;;
+		ltgreen|lightgreen)
+			num=10
+			;;
+		yellow|ltyellow|lightyellow|ltorange|lightorange)
+			num=11
+			;;
+		ltblue|lightblue)
+			num=12
+			;;
+		ltmagenta|lightmagenta)
+			num=13
+			;;
+		ltcyan|lightcyan)
+			num=14
+			;;
+		white)
+			num=15
+	esac
+
+	echo $num
+}
+
+setColor $@
+
+# vim: set fenc=utf-8 ff=unix ft=sh :
