@@ -126,4 +126,4 @@ end tell
 EOD
 fi
 
-# vim: set ft=sh
+# vim: set ft=sh :

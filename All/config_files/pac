@@ -1,0 +1,3 @@
+function FindProxyForURL(url, host) {
+  return "DIRECT; SOCKS localhost:1337";
+}
