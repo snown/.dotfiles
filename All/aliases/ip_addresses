@@ -1,4 +1,4 @@
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
-alias localip="ipconfig getifaddr en0"
+alias localip="ifconfig | sed -n 's/^\(en[0-9]\).*/\1/p' | while read en; do ip=\$(ipconfig getifaddr \$en); if [[ \"\$ip\" != \"\" ]]; then echo \"\$en: \$ip\"; fi; done"
 alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
