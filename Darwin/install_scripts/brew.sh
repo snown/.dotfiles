@@ -105,6 +105,7 @@ casks=(
 	resilio-sync
 	fontforge
 	docker
+	hockey
 )
 brew cask install ${casks[@]}
 
