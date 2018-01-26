@@ -1,0 +1,2 @@
+# Rsync with flags for copying a whole disk to a new disk
+alias disksync="rsync -haxHAWXS --numeric-ids --info=progress2"
