@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+while getopts "vnic" opt; do
+  case $opt in
+  v)
+    setColor -f green -o bold
+    echo "Cleaning Volumes..." >&2
+    setColor reset
+    DANGLING_VOLUMES="$(docker volume ls -qf dangling=true)"
+    if [[ -z "${DANGLING_VOLUMES}" ]] ; then
+      echo "No volumes to cleanup"
+    else
+      docker volume rm ${DANGLING_VOLUMES}
+    fi
+    ;;
+  n)
+    setColor -f green -o bold
+    echo "Cleaning Networks..."
+    setColor reset
+    
+    DANGLING_NETWORKS="$(docker network ls | grep "bridge" | awk '/ / { print $1 }')"
+    if [[ -z "${DANGLING_NETWORKS}" ]]; then
+      echo "No networks to cleanup"
+    else
+      docker network rm ${DANGLING_NETWORKS}
+    fi
+    ;;
+  i)
+    setColor -f green -o bold
+    echo "Cleaning Images..."
+    setColor reset
+    
+    DANGLING_IMAGES="$(docker images --filter "dangling=true" -q --no-trunc)"
+    ORPHAN_IMAGES="$(docker images | grep "none" | awk '/ / { print $3 }')"
+    
+    if [ -z "${DANGLING_IMAGES}" ] && [ -z "${ORPHAN_IMAGES}" ]; then
+      echo "No images to cleanup"
+    else
+      docker rmi ${DANGLING_IMAGES} ${ORPHAN_IMAGES}
+    fi
+    ;;
+  c)
+    setColor -f green -o bold
+    echo "Cleaning Containers..."
+    setColor reset
+    
+    EXITED_CONTAINERS="$(docker ps -qa --no-trunc --filter "status=exited")"
+    if [[ -z "${EXITED_CONTAINERS}" ]]; then
+      echo "No containers to cleanup"
+    else
+      docker rm ${EXITED_CONTAINERS}
+    fi
+    ;;
+  \?)
+    echo "Invalid option: -$OPTARG" >&2
+    exit 1
+    ;;
+  esac
+done
+
+if [ $OPTIND -eq 1 ]; then
+  docker-cleaner -vic
+fi
+
+# vim: set fenc=utf-8 ff=unix ft=sh :
