@@ -16,3 +16,9 @@ if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hh -- \C-j"'; fi
 # Add brew installed Bash Completions
 #------------------------------------------------------------------------------
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+# swiftenv
+#------------------------------------------------------------------------------
+export SWIFTENV_ROOT="$HOME/.swiftenv"
+export PATH="$SWIFTENV_ROOT/bin:$PATH"
+eval "$(swiftenv init -)"

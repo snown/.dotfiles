@@ -16,3 +16,7 @@ fresh altercation/solarized "osx-terminal.app-colors-solarized/xterm-256color/So
 # Install Solarized Color Palette
 #------------------------------------------------------------------------------
 fresh altercation/solarized "apple-colorpalette-solarized/solarized.clr" --file="~/Library/Colors/Solarized.clr"
+
+# Install Swiftenv
+#------------------------------------------------------------------------------
+fresh kylef/swiftenv --file="~/.swiftenv/"
