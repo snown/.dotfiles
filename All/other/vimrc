@@ -132,6 +132,10 @@ set number
 " Keep 5 lines below cursor available at all times
 set scrolloff=5
 
+if has("mac") || has("macunix")
+	set clipboard=unnamed
+endif
+
 " Status Line
 " -----------------------------------------------------------------------------
 
