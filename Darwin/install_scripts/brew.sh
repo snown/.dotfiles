@@ -73,9 +73,10 @@ ln -sf /usr/local/bin/gfind "${FRESH_BIN_PATH:-$HOME/.bin}/find"
 
 # Install essential casks
 echo "Filling casks..."
-brew install caskroom/cask/brew-cask
+#brew install caskroom/cask/brew-cask
 
 casks=(
+	cakebrew
 	dropbox
 	google-chrome
 	mplayerx
@@ -97,6 +98,7 @@ casks=(
 	unrarx
 	colorpicker-developer
 	colorpicker-hex
+  colorpicker-skalacolor
 	moom
 	sourcetree
 	webstorm-eap
