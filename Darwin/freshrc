@@ -19,4 +19,4 @@ fresh altercation/solarized "apple-colorpalette-solarized/solarized.clr" --file=
 
 # Install Swiftenv
 #------------------------------------------------------------------------------
-fresh kylef/swiftenv --file="~/.swiftenv/"
+fresh kylef/swiftenv . --file="~/.swiftenv/"

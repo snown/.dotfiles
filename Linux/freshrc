@@ -48,15 +48,6 @@ fresh junegunn/vim-plug plug.vim --file="$HOME/.config/nvim/autoload/plug.vim"
 fresh All/other/ssh.config --file="$HOME/.ssh/config"
 
 ################################################################################
-# Nerd Font Scripts                                                            #
-################################################################################
-NERD_FONT_REPO="${FRESH_PATH}/source/ryanoasis/nerd-fonts"
-mkdir -p "${NERD_FONT_REPO}"
-( git reset --hard HEAD && git -C "${NERD_FONT_REPO}" pull --depth 1 ) || clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
-
-fresh ryanoasis/nerd-fonts bin/scripts/lib/*.sh --bin
-
-################################################################################
 # Terminal                                                                     #
 ################################################################################
 # Liquid Prompt

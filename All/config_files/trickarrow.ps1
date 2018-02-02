@@ -1,4 +1,4 @@
-SEGMENT_SEPARATOR='⮂'
+SEGMENT_SEPARATOR=$'\uE0B2' # 
 
 CURRENT_BG_COLOR=darkgrey
 CURRENT_FG_COLOR=default
@@ -13,7 +13,7 @@ start_segment() {
   [[ -n $2 ]] && text_color="$2" || text_color=$CURRENT_FG_COLOR
 	[[ -n $3 ]] && format="$3" || format=$CURRENT_FORMAT
 
-	echo -en "$(setcolor -f $segment_color -b $CURRENT_BG_COLOR)$SEGMENT_SEPARATOR$(colorset -o $format -f $text_color -b $segment_color) "
+	echo -en "$(setcolor -f $segment_color -b $CURRENT_BG_COLOR)$SEGMENT_SEPARATOR$(setcolor -o $format -f $text_color -b $segment_color) "
 	CURRENT_BG_COLOR=$segment_color
 	CURRENT_FG_COLOR=$text_color
 	CURRENT_FORMAT=$format
@@ -253,8 +253,9 @@ fi
 
 if [[ "$AUX_INFO" != "" ]]; then 
 	AUX_INFO="[$AUX_INFO]─"
+  AUX_INFO="$(sed -E 's/[[:cntrl:]]\[([0-9]{1,2};)*[0-9]{0,2}m/\\\[&\\\]/g' <<< "${AUX_INFO}")"
 fi
 
-LP_PS1+="\n╰─${AUX_INFO}▶︎ " 
+LP_PS1+="\n╰─${AUX_INFO}▶︎\[ \]" 
 
 # vim: set ft=sh :

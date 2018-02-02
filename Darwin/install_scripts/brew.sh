@@ -18,7 +18,6 @@ brew upgrade
 echo "Tapping kegs..."
 kegs=(
 	"thoughtbot/formulae"
-	"homebrew/versions"
 	"caskroom/versions"
 	"caskroom/fonts"
 	"neovim/neovim"
@@ -31,24 +30,16 @@ done
 echo "Pouring brews..."
 brews=(
 	bash
-	python
-	python3
 	"ruby --with-doc"
 	ssh-copy-id
 	the_silver_searcher
-	tree
 	"wget --with-pcre"
-	pandoc
-	rhash
 	multimarkdown
 	objc-run
-	tmux
 	xcproj
 	unrar
 	mas
-	bash-completion
 	"git --with-pcre"
-	pacapt
 	"coreutils --with-gmp"
 	findutils
 	spoof-mac
@@ -56,10 +47,7 @@ brews=(
 	hh
 	neovim
 	fontforge
-	rename
 	tor
-	wdiff
-	editorconfig
 	gibo
 
 	# Commenting Node out right now because there is a better way to do it with version switching
@@ -76,38 +64,38 @@ echo "Filling casks..."
 #brew install caskroom/cask/brew-cask
 
 casks=(
-	cakebrew
-	dropbox
-	google-chrome
-	mplayerx
-	the-unarchiver
-	torbrowser
-	trim-enabler
 	atom
+	cakebrew
+	colorpicker-developer
+	colorpicker-hex
+  colorpicker-skalacolor
+	docker
+	dropbox
+	fastlane
+	fontforge
+	google-chrome
 	gpgtools
-	xquartz
+	hockey
 	inkscape
 	keka
 	lingon-x
 	macid
+	moom
+	mplayerx
+	resilio-sync
 	sequel-pro
 	slack
-	textmate
-	tower
-	virtualbox
-	unrarx
-	colorpicker-developer
-	colorpicker-hex
-  colorpicker-skalacolor
-	moom
 	sourcetree
-	webstorm-eap
-	fastlane
 	sqlitebrowser
-	resilio-sync
-	fontforge
-	docker
-	hockey
+	textmate
+	the-unarchiver
+	torbrowser
+	tower
+	trim-enabler
+	unrarx
+	virtualbox
+	webstorm-eap
+	xquartz
 )
 brew cask install ${casks[@]}
 
