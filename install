@@ -95,9 +95,9 @@ function getFileElementsInOrder () {
   
   local ALL_FILES=( "${INPUT}" )
 
-  if [ ${#ALL_FILES[@]} > 0 ] && [ -r "$(dirname "${ALL_FILES[0]}")/.file_order" ]; then
+  if [ ${#ALL_FILES[@]} > 0 ] && [ -r "$(dirname "${ALL_FILES[0]}")/.fresh_order" ]; then
     local DIRNAME="$(dirname "${ALL_FILES[0]}")"
-    declare -a SPECIFIED_ORDER="$(elementsFromFile "${DIRNAME}/.file_order")"
+    declare -a SPECIFIED_ORDER="$(elementsFromFile "${DIRNAME}/.fresh_order")"
     SPECIFIED_ORDER=( "${SPECIFIED_ORDER[@]/#/${DIRNAME}/}" )
   fi
 
