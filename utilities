@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+function setcolor {
+	if [ -x "$(command -v setcolor)"  ]; then
+		$(command -v setcolor) "$@"
+  elif [ -x "${FRESH_LOCAL:-.}/All/bin/setcolor" ]; then
+		"${FRESH_LOCAL:-.}"/All/bin/setcolor "$@"
+  fi
+}
+
+function _is_git_repo {
+	if [[ $# -gt 0 ]]; then
+		pushd "$1" 1>/dev/null || return
+	fi
+	
+	git rev-parse --is-inside-work-tree > /dev/null 2>&1
+	result=$?
+	
+	if [[ $# -gt 0 ]]; then
+		popd 1>/dev/null
+	fi
+	
+	return $result
+}
+
+function _needs_git_pull {
+	if [[ $# -gt 0 ]]; then
+		pushd "$1" 1>/dev/null || return
+	fi
+	
+	local neeeds_pull
+	_is_git_repo || needs_pull=false
+	if [ -z ${needs_pull+x} ]; then
+		local branch
+		if branch="$(git symbolic-ref -q HEAD)"; then
+			branch="${branch#refs/heads/}"
+			# Escape branch name if needed
+			branch="${branch//\\/\\\\}"
+	  else
+	    branch="$(git rev-parse --short -q HEAD)"
+	  fi
+
+		if [[ -n "${branch}" ]]; then
+			local remote="$(git config --get branch.${branch}.remote 2>/dev/null)"
+			if [[ -n "${remote}" ]]; then
+				local remote_branch="$(git config --get branch.${branch}.merge)"
+				if [[ -n "$remote_branch" ]]; then
+					remote_branch=${remote_branch/refs\/heads/refs\/remotes\/$remote}
+					commit_behind="$(git rev-list --count HEAD..$remote_branch 2>/dev/null)"
+					needs_pull=true
+				fi
+			fi
+		fi
+	fi
+	
+	if [[ $# -gt 0 ]]; then
+		popd 1>/dev/null
+	fi
+	
+	${needs_pull:-false} # return true or false
+}

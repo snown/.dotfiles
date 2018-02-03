@@ -8,6 +8,8 @@
 #
 # See http://freshshell.com/readme for documentation.
 
+source "${FRESH_LOCAL:-${HOME}/.dotfiles}/utilities"
+
 ################################################################################
 # Utilities                                                                    #
 ################################################################################
@@ -50,13 +52,15 @@ fresh All/other/ssh.config --file="$HOME/.ssh/config"
 ################################################################################
 # Nerd Font Scripts                                                            #
 ################################################################################
+
 NERD_FONT_REPO="${FRESH_PATH}/source/ryanoasis/nerd-fonts"
-mkdir -p "${NERD_FONT_REPO}"
-( \
+if _needs_git_pull "${NERD_FONT_REPO}"; then
 	git -C "${NERD_FONT_REPO}" reset --hard HEAD \
-	&& git -C "${NERD_FONT_REPO}" pull --depth 1 \
-) \
-|| git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
+	&& git -C "${NERD_FONT_REPO}" pull --depth 1
+else 
+	mkdir -p "${NERD_FONT_REPO}"
+	git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
+fi
 
 fresh ryanoasis/nerd-fonts bin/scripts/lib/*.sh --bin
 

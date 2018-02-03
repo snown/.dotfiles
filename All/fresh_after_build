@@ -1,10 +1,4 @@
-function setcolor {
-	if [ -x "$(command -v setcolor)"  ]; then
-		$(command -v setcolor) "$@"
-  elif [ -x "${FRESH_LOCAL}/All/bin/setcolor" ]; then
-		"${FRESH_LOCAL}"/All/bin/setcolor "$@"
-  fi
-}
+source "${FRESH_LOCAL:-${HOME}/.dotfiles}/utilities"
 
 echo "Checking Git Config..."
 

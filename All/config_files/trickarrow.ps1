@@ -1,4 +1,5 @@
-SEGMENT_SEPARATOR=$'\uE0B2' # 
+source "${FRESH_BIN_PATH:-$HOME/.bin}/i_all.sh"
+SEGMENT_SEPARATOR="${i_pl_right_hard_divider}" # 
 
 CURRENT_BG_COLOR=darkgrey
 CURRENT_FG_COLOR=default
@@ -137,15 +138,15 @@ function batt_prompt {
 			;;
 		*)
 			if (( $percent == 100 )); then
-				indicator="$(setcolor -f green)\uf240"
+				indicator="$(setcolor -f green)${i_fa_battery_4}"
 			elif (( $percent >= 75 )); then
-				indicator="$(setcolor -f green)\uf241"
+				indicator="$(setcolor -f green)${i_fa_battery_3}"
 			elif (( $percent >= 50 )); then
-				indicator="$(setcolor -f orange)\uf242"
+				indicator="$(setcolor -f orange)${i_fa_battery_2}"
 			elif (( $percent >= 25 )); then
-				indicator="$(setcolor -f red)\uf243"
+				indicator="$(setcolor -f red)${i_fa_battery_1}"
 			else
-				indicator="$(setcolor -f red)\uf244"
+				indicator="$(setcolor -f red)${i_fa_battery_0}"
 			fi
 	esac
 
