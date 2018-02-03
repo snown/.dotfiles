@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+function setcolor {
+	if [ -x "$(command -v setcolor)"  ]; then
+		$(command -v setcolor) "$@"
+	else
+		"${FRESH_LOCAL}"/All/bin/setcolor "$@"
+}
+
 ################################################################################
 # Clone/Pull Nerd Fonts Repo
 ################################################################################
