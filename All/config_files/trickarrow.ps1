@@ -252,7 +252,7 @@ if (( EUID == 0 )); then
 fi
 
 if [[ "$AUX_INFO" != "" ]]; then 
-	AUX_INFO="[$AUX_INFO]─"
+	AUX_INFO="[ $AUX_INFO]─"
   AUX_INFO="$(sed -E 's/[[:cntrl:]]\[([0-9]{1,2};)*[0-9]{0,2}m/\\\[&\\\]/g' <<< "${AUX_INFO}")"
 fi
 

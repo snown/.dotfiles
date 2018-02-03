@@ -3,8 +3,9 @@
 function setcolor {
 	if [ -x "$(command -v setcolor)"  ]; then
 		$(command -v setcolor) "$@"
-	else
+  elif [ -x "${FRESH_LOCAL}/All/bin/setcolor" ]; then
 		"${FRESH_LOCAL}"/All/bin/setcolor "$@"
+  fi
 }
 
 ################################################################################
