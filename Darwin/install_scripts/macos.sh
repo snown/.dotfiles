@@ -2,6 +2,11 @@
 # Sets reasonable OS X defaults.
 #
 
+OS_VERS="$(sw_vers -productVersion)"
+OS_VERS_MAJOR=${OS_VERS%%.*}
+OS_VERS_MINOR="$(OS_VERS_MINOR=${OS_VERS%.*} ; ${OS_VERS_MINOR##*.})"
+OS_VERS_PATCH${OS_VERS##*.}
+
 echo -e "\nSetting OSX Defaults..."
 
 # Ask for the administrator password upfront
@@ -72,8 +77,11 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 ###############################################################################
 echo -e "\e[34m==>\e[m SSD-specific tweaks"
 
-# Disable local Time Machine snapshots
-sudo tmutil disablelocal
+if [[ ${OS_VERS_MINOR} -lt 13 ]]; then
+  # Disable local Time Machine snapshots if able
+  # `disablelocal` verb was removed in macOS 10.13
+  sudo tmutil disablelocal
+fi
 
 # Disable hibernation (speeds up entering sleep mode)
 #sudo pmset -a hibernatemode 0
