@@ -5,7 +5,7 @@
 ################################################################################
 NERD_FONT_REPO="${FRESH_PATH}/source/ryanoasis/nerd-fonts"
 mkdir -p "${NERD_FONT_REPO}"
-( git reset --hard HEAD && git -C "${NERD_FONT_REPO}" pull --depth 1 ) || clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
+( git reset --hard HEAD && git -C "${NERD_FONT_REPO}" pull --depth 1 ) || git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
 
 ################################################################################
 # Create Custom Monoid Nerd Font
