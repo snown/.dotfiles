@@ -5,7 +5,11 @@
 ################################################################################
 NERD_FONT_REPO="${FRESH_PATH}/source/ryanoasis/nerd-fonts"
 mkdir -p "${NERD_FONT_REPO}"
-( git reset --hard HEAD && git -C "${NERD_FONT_REPO}" pull --depth 1 ) || git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
+( \
+	git -C "${NERD_FONT_REPO}" reset --hard HEAD \
+	&& git -C "${NERD_FONT_REPO}" pull --depth 1 \
+) \
+|| git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
 
 ################################################################################
 # Create Custom Monoid Nerd Font
@@ -22,11 +26,11 @@ popd 1>/dev/null
 pushd "${NERD_FONT_REPO}" 1>/dev/null
 for font in /tmp/monoid/*.ttf; do
   # Generate Standard Nerd Font
-  ./font-patcher -l -c --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
+  ./font-patcher -q -l -c --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
   # Generate Mono Nerd Font
-  ./font-patcher -l -c -s --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
+  ./font-patcher -q -l -c -s --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
   # Generate Windows Nerd Font
-  ./font-patcher -l -c -w --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
+  ./font-patcher -q -l -c -w --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
 done
 
 ################################################################################
@@ -49,7 +53,7 @@ NERD_FONTS=(
 
 for font in "${NERD_FONTS[@]}"; do
   echo "$(setcolor -f blue)==>$(setcolor reset) Installing ${font}..."
-  ./install.sh -S "${font}"
+  ./install.sh -Sq "${font}"
 done
 
 popd 1>/dev/null
