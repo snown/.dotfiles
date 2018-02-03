@@ -33,11 +33,14 @@ popd 1>/dev/null
 pushd "${NERD_FONT_REPO}" 1>/dev/null
 for font in /tmp/monoid/*.ttf; do
   # Generate Standard Nerd Font
-  ./font-patcher -q -l -c --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
+	echo "$(setcolor -f blue)==>$(setcolor reset) Generating Monoid Nerd Font"
+  ./font-patcher -l -c --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}" &>/dev/null
   # Generate Mono Nerd Font
-  ./font-patcher -q -l -c -s --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
+	echo "$(setcolor -f blue)==>$(setcolor reset) Generating Monoid Mono Nerd Font"
+  ./font-patcher -l -c -s --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}" &>/dev/null
   # Generate Windows Nerd Font
-  ./font-patcher -q -l -c -w --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}"
+	echo "$(setcolor -f blue)==>$(setcolor reset) Generating Monoid Windows Nerd Font"
+  ./font-patcher -l -c -w --careful --outputdir "./patched-fonts/Monoid/complete/" "${font}" &>/dev/null
 done
 
 ################################################################################
