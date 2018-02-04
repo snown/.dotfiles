@@ -20,29 +20,14 @@ urlencode() {
 ################################################################################
 echo "Installing fonts..."
 fonts=(
-  source-code-pro-for-powerline
-  hasklig
   input
   roboto
-	fira-code
-  fira-mono-for-powerline
-  firacode-nerd-font-mono
-  firacode-nerd-font
 	fontawesome
 	consolas-for-powerline
 	droid-sans
-	droid-sans-mono
 	menlo-for-powerline
-  meslo-lg-for-powerline
-  hack
-  hack-nerd-font
   fantasque-sans-mono
-  mononoki
-  # monoid-halftight-l
   monoisome
-  inconsolata-for-powerline
-  inconsolata-dz-for-powerline
-  inconsolata-g-for-powerline
 )
 brew cask install ${fonts[@]/#/font-} # Prefix each font wit "font-" ## http://stackoverflow.com/a/13216833
 
