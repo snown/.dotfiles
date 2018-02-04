@@ -63,6 +63,7 @@ else
 fi
 
 fresh ryanoasis/nerd-fonts bin/scripts/lib/*.sh --bin
+fresh ryanoasis/nerd-fonts font-patcher --bin="${FRESH_BIN_PATH}/nerdfont-patcher"
 
 ################################################################################
 # Terminal                                                                     #
