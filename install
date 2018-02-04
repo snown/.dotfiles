@@ -147,11 +147,11 @@ CONTEXT_FULL_DIR="\$FRESH_LOCAL/${CONTEXT_NAME}/"
 
 CONTEXT_HEADER
 
-if [ -r "${SCRIPT_DIR}/${CONTEXT_NAME}/freshrc" ]; then
-  cat "${SCRIPT_DIR}/${CONTEXT_NAME}/freshrc" >> "$HOME/.freshrc"
-fi
-
 cat >> "$HOME/.freshrc" <<-'CONTEXT_FRESH_COMMANDS'
+
+if [ -r "${CONTEXT_FULL_DIR}/freshrc" ]; then
+  source "${CONTEXT_FULL_DIR}/freshrc"
+fi
 
 if [ -d "$CONTEXT_FULL_DIR/bin" ]; then
   fresh "$(combinePaths ${CONTEXT_DIR} "bin")/*" --bin
