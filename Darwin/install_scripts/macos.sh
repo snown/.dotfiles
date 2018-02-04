@@ -4,8 +4,8 @@
 
 OS_VERS="$(sw_vers -productVersion)"
 OS_VERS_MAJOR=${OS_VERS%%.*}
-OS_VERS_MINOR="$(OS_VERS_MINOR=${OS_VERS%.*} ; ${OS_VERS_MINOR##*.})"
-OS_VERS_PATCH${OS_VERS##*.}
+OS_VERS_MINOR="$(OS_VERS_MINOR="${OS_VERS%.*}" ; echo "${OS_VERS_MINOR##*.}")"
+OS_VERS_PATCH=${OS_VERS##*.}
 
 echo -e "\nSetting OSX Defaults..."
 
@@ -71,6 +71,9 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 
 # Disable smart dashes as they’re annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Set sleep settings for battery mode
+sudo pmset -b sleep 15 disksleep 15 displaysleep 10
 
 ###############################################################################
 # SSD-specific tweaks                                                         #
