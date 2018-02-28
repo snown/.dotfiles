@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Only supports one die, and the most basic notation right now
+# would like to complete support for dice notation as specified here:
+# https://en.wikipedia.org/wiki/Dice_notation
+
+_basename() { #portable basename
+    [ -z "${1}" ] && return 1 || _basename__name="${1%%/}"
+    [ -z "${2}" ] || _basename__suffix="${2}"
+    case "${_basename__name}" in
+        /*|*/*) _basename__name="$(expr "${_basename__name}" : '.*/\([^/]*\)')" ;;
+    esac
+
+    if [ -n "${_basename__suffix}" ] && [ "${#_basename__name}" -gt "${#2}" ]; then
+        if [ X"$(printf "%s" "${_basename__name}" | cut -c"$((${#_basename__name} - ${#_basename__suffix} + 1))"-"${#_basename__name}")" \
+           = X"$(printf "%s" "${_basename__suffix}")" ]; then
+            _basename__name="$(printf "%s" "${_basename__name}" | cut -c1-"$((${#_basename__name} - ${#_basename__suffix}))")"
+        fi
+    fi
+
+    printf "%s" "${_basename__name}"
+}
+
+_random() { #return a random number between two limits
+    #default to numbers between 1-10
+    local _min="${1:-1}"
+    local _max="${2:-10}"
+    local diff=$((${_max}-${_min}+1))
+    echo -n "$(($((${RANDOM}%${diff}))+${_min}))"
+}
+
+if [ $# -lt 1 ]; then
+  echo "USAGE: $(_basename $0) [number of dice]d[sides of dice] (i.e. 1d6)"
+  exit 1
+fi
+
+NOTATION="$1"
+QTY="${NOTATION%%d*}"
+NUMBER_OF_SIDES="${NOTATION#*d}"
+
+TOTAL=0
+for i in $(seq 1 $QTY); do
+  result="$(_random 1 ${NUMBER_OF_SIDES})"
+  echo -n "$result"
+  if [[ i -lt $QTY ]]; then
+    echo -n ", "
+  fi
+  TOTAL=$((TOTAL+${result}))
+done
+
+if [ ${QTY} -gt 1 ]; then
+  echo " = ${TOTAL}"
+else
+  echo
+fi
