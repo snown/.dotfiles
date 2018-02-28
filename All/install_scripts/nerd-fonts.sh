@@ -8,7 +8,7 @@ source "${FRESH_LOCAL:-${HOME}/.dotfiles}/utilities"
 
 NERD_FONT_REPO="${FRESH_PATH}/source/ryanoasis/nerd-fonts"
 if _needs_git_pull "${NERD_FONT_REPO}"; then
-	git -C "${NERD_FONT_REPO}" reset --hard HEAD \
+	git -C "${NERD_FONT_REPO}" reset --hard origin/master \
 	&& git -C "${NERD_FONT_REPO}" pull --depth 1
 elif [[ ! -d "${NERD_FONT_REPO}" ]]; then
 	mkdir -p "${NERD_FONT_REPO}"
