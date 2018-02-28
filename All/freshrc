@@ -23,6 +23,8 @@ fresh pengwynn/dotfiles bin/termcolors --bin
 ## Test Internet bandwidth using speedtest.net
 fresh sivel/speedtest-cli speedtest_cli.py --bin=$FRESH_BIN_PATH/speedtest
 
+fresh snown/bashing bin/bashing --bin
+
 ################################################################################
 # Config Files                                                                 #
 ################################################################################
