@@ -10,7 +10,7 @@ NERD_FONT_REPO="${FRESH_PATH}/source/ryanoasis/nerd-fonts"
 if _needs_git_pull "${NERD_FONT_REPO}"; then
 	git -C "${NERD_FONT_REPO}" reset --hard HEAD \
 	&& git -C "${NERD_FONT_REPO}" pull --depth 1
-else 
+elif [[ ! -d "${NERD_FONT_REPO}" ]]; then
 	mkdir -p "${NERD_FONT_REPO}"
 	git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git "${NERD_FONT_REPO}"
 fi
