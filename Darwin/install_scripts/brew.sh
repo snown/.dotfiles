@@ -97,6 +97,7 @@ casks=(
 	virtualbox
 	webstorm-eap
 	xquartz
+  provisionql
 )
 brew cask install ${casks[@]}
 
