@@ -49,6 +49,7 @@ brews=(
 	fontforge
 	tor
 	gibo
+  gnu-sed
 
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
