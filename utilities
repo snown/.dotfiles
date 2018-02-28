@@ -61,3 +61,11 @@ function _needs_git_pull {
 	
 	[[ "${needs_pull:-false}" == true ]] && return 0 || return 1
 }
+
+function _sudo {
+  if [[ "$(id -u)" -ne 0 ]]; then
+    sudo "$@"
+  else
+    "$@"
+  fi
+}
