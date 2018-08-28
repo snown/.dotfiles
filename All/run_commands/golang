@@ -1,0 +1,5 @@
+# Setup Go Lang
+export GOPATH="$HOME/.golang"
+if [ -d "$GOPATH/bin" ] ; then
+  PATH="$GOPATH/bin:$PATH"
+fi
