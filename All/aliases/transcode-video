@@ -1,0 +1,4 @@
+function transcode_video {
+  local datadir="${1:-$(pwd)}"
+  screen -S video-transcoding sudo docker run -itv "${datadir}":/data ntodd/video-transcoding
+}
