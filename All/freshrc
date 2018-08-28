@@ -21,7 +21,7 @@ fresh twe4ked/catacomb bin/catacomb --bin
 fresh pengwynn/dotfiles bin/termcolors --bin
 
 ## Test Internet bandwidth using speedtest.net
-fresh sivel/speedtest-cli speedtest_cli.py --bin=$FRESH_BIN_PATH/speedtest
+fresh sivel/speedtest-cli speedtest.py --bin=$FRESH_BIN_PATH/speedtest
 
 fresh snown/bashing bin/bashing --bin
 
