@@ -25,6 +25,12 @@ fresh sivel/speedtest-cli speedtest.py --bin=$FRESH_BIN_PATH/speedtest
 
 fresh snown/bashing bin/bashing --bin
 
+fresh snown/dckr dckr --bin
+fresh snown/dckr completion/bash/dckr --file="/etc/bash_completion.d/dckr"
+if [[ ! -f "/etc/bash_completion.d/docker-compose" ]]; then
+  fresh docker/compose contrib/completion/bash/docker-compose --file="/etc/bash_completion.d/docker-compose"
+fi
+
 ################################################################################
 # Config Files                                                                 #
 ################################################################################
