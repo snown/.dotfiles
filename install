@@ -196,19 +196,9 @@ export FRESH_LOCAL=${FRESH_LOCAL}
 export FRESH_BIN_PATH=${FRESH_BIN_PATH}
 export FRESH_BASH_COMPS_PATH=${FRESH_BASH_COMPS_PATH}
 
-bash_completion_paths=(
-"\${HOME}/.local/etc/bash_completion.d"
-"\${HOME}/.local/share/bash_completion/completions"
-"\${HOME}/.etc/bash_completion.d"
-"\${HOME}/.share/bash_completion/completions"
-"/usr/local/etc/bash_completion.d"
-"/usr/local/share/bash_completion/completions"
-"/etc/bash_completion.d"
-"/usr/share/bash_completion/completions"
-)
-export BASH_COMPLETION_PATH=\$(IFS=:; echo "\${bash_completion_paths[*]}")
-
 CONTEXTS=( "All" "\$(uname)" "Local" )
+
+fresh .pre-shell-sh --ignore-missing
 
 fresh freshshell/fresh bin/fresh --bin
 

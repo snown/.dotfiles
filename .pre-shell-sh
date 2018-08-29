@@ -1,0 +1,13 @@
+# vim: ft=sh
+
+bash_completion_paths=(
+"${HOME}/.local/etc/bash_completion.d"
+"${HOME}/.local/share/bash_completion/completions"
+"${HOME}/.etc/bash_completion.d"
+"${HOME}/.share/bash_completion/completions"
+"/usr/local/etc/bash_completion.d"
+"/usr/local/share/bash_completion/completions"
+"/etc/bash_completion.d"
+"/usr/share/bash_completion/completions"
+)
+export BASH_COMPLETION_PATH=$(IFS=:; echo "${bash_completion_paths[*]}")
