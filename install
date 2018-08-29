@@ -162,7 +162,7 @@ if [ -d "$CONTEXT_FULL_DIR/config_files" ]; then
 fi
 
 if [ -d "$CONTEXT_FULL_DIR/aliases" ]; then
-  ALIAS_PATH="${CONTEXT_FULL_DIR}aliases/*"
+  ALIAS_PATH="$(combinePaths "${CONTEXT_FULL_DIR}" "aliases/*")"
   for f in $ALIAS_PATH; do
     fresh "$(combinePaths ${CONTEXT_DIR} "aliases" $(basename $f))" --file="$HOME/.aliases/$(basename $f)"
   done
@@ -173,6 +173,12 @@ if [ -d "${CONTEXT_FULL_DIR}/run_commands" ]; then
   for run_command in "${RUN_COMMANDS[@]}"; do
     fresh "$(combinePaths ${CONTEXT_DIR} "run_commands/$(basename "$run_command")")"
   done
+fi
+
+if [ -d "${CONTEXT_FULL_DIR}/bash_completions" ]; then
+  for completion_file in "${CONTEXT_FULL_DIR}/bash_completions"/*; do
+    fresh "$(combinePaths "${CONTEXT_DIR}" "bash_completions" "$(basename "${completion_file}")")" --file="${HOME}/.etc/bash_completion.d/$(basename "${completion_file}")"
+  done 
 fi
 
 CONTEXT_FRESH_COMMANDS
@@ -187,6 +193,19 @@ cat > "$HOME/.freshrc" <<-EOD
 
 export FRESH_LOCAL=${FRESH_LOCAL}
 export FRESH_BIN_PATH=${FRESH_BIN_PATH}
+
+bash_completion_paths=(
+"\${HOME}/.local/etc/bash_completion.d"
+"\${HOME}/.local/share/bash_completion/completions"
+"\${HOME}/.etc/bash_completion.d"
+"\${HOME}/.share/bash_completion/completions"
+"/usr/local/etc/bash_completion.d"
+"/usr/local/share/bash_completion/completions"
+"/etc/bash_completion.d"
+"/usr/share/bash_completion/completions"
+)
+export BASH_COMPLETION_PATH=\$(IFS=:; echo "\${bash_completion_paths[*]}")
+
 CONTEXTS=( "All" "\$(uname)" "Local" )
 
 fresh freshshell/fresh bin/fresh --bin
