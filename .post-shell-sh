@@ -3,7 +3,18 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 if [[ ! -z ${BASH_COMPLETION_PATH:-x} ]]; then
-  IFS=: read -ra completion_dirs <<< "${BASH_COMPLETION_PATH}"
+  IFS=: read -ra completion_paths <<< "${BASH_COMPLETION_PATH}"
+  
+  completion_dirs=()
+  for (( i = ${#completion_paths[@]}-1; i >= 0; i-- )); do
+    completion_dir="${completion_paths[$i]}"
+    if [[ -f "${completion_dir}/../bash_completion" && -r "${completion_dir}/../bash_completion" ]]; then
+      . "${completion_dir}/../bash_completion"
+    else
+      completion_dirs+=( "${completion_dir}" )
+    fi
+  done
+  
   for completion_dir in "${completion_dirs[@]}"; do
     for completion_file in "${completion_dir}"/*; do
       if [[ -f "${completion_file}" && -r "${completion_file}" ]]; then
