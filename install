@@ -8,6 +8,7 @@ SCRIPT_DIR=$( cd "$(dirname "$0")" ; pwd -P )
 # Make sure env FRESH_LOCAL is set. If not, set to the current directory.
 export FRESH_LOCAL=${FRESH_LOCAL:-$SCRIPT_DIR}
 export FRESH_BIN_PATH=${FRESH_BIN_PATH:-$HOME/.bin}
+export FRESH_BASH_COMPS_PATH=${FRESH_BASH_COMPS_PATH:-${HOME}/.etc/bash_completion.d}
 
 # Context list
 CONTEXTS=( "All" "$(uname)" "Local" )
@@ -177,7 +178,7 @@ fi
 
 if [ -d "${CONTEXT_FULL_DIR}/bash_completions" ]; then
   for completion_file in "${CONTEXT_FULL_DIR}/bash_completions"/*; do
-    fresh "$(combinePaths "${CONTEXT_DIR}" "bash_completions" "$(basename "${completion_file}")")" --file="${HOME}/.etc/bash_completion.d/$(basename "${completion_file}")"
+    fresh "$(combinePaths "${CONTEXT_DIR}" "bash_completions" "$(basename "${completion_file}")")" --file="\${FRESH_BASH_COMPS_PATH}/$(basename "${completion_file}")"
   done 
 fi
 
@@ -193,6 +194,7 @@ cat > "$HOME/.freshrc" <<-EOD
 
 export FRESH_LOCAL=${FRESH_LOCAL}
 export FRESH_BIN_PATH=${FRESH_BIN_PATH}
+export FRESH_BASH_COMPS_PATH=${FRESH_BASH_COMPS_PATH}
 
 bash_completion_paths=(
 "\${HOME}/.local/etc/bash_completion.d"
