@@ -3,7 +3,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 if [[ ! -z ${BASH_COMPLETION_PATH:-x} ]]; then
-  IFS=: read -ra completion_dirs <<< "${BASH_COMPLETION_PATH"
+  IFS=: read -ra completion_dirs <<< "${BASH_COMPLETION_PATH}"
   for completion_dir in "${completion_dirs[@]}"; do
     for completion_file in "${completion_dir}"/*; do
       if [[ -f "${completion_file}" && -r "${completion_file}" ]]; then
