@@ -69,3 +69,85 @@ function _sudo {
     "$@"
   fi
 }
+
+function _encrypt {
+  local algorithm="AES256"
+  local multi=false
+  local output
+  local input=()
+  local src
+  local delete_originals=false
+  local passphrase_arg
+  local force=false
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -c|--algorithm|--cipher|--cipher-algo)
+      algorithm="$2"
+      shift
+      ;;
+    -o|--out)
+      output="$2"
+      shift
+      ;;
+    -d|--delete)
+      delete_originals=true
+      ;;
+    --passphrase-stdin)
+      passphrase_arg="--batch --passphrase-fd 0"
+      ;;
+    -f|--force)
+      force=true
+      ;;
+    *)
+      input+=( "$1" )
+      if [[ ${#input[@]} -gt 1 ]] || [[ -d "$1" ]]; then
+        multi=true
+      fi
+      ;;
+    esac
+    shift
+  done
+  
+  if [[ "${multi}" == true ]]; then
+    if [[ -z ${output:+x} ]]; then
+      if [[ ${#input[@]} -gt 1 ]]; then
+        output="secrets"
+      else
+        output="$(basename "${input[0]}")"
+      fi
+    fi
+    output="${output}.multi"
+    tar cf "${output}" "${input[@]}"
+    src="${output}"
+  else
+    src="${input[0]}"
+  fi
+  
+  if [[ "${force}" == true ]]; then
+    if [[ -n ${output:+x} ]]; then
+      test -e "${output}.gpg" && rm "${output}.gpg"
+    elif [[ -e "${src}.gpg"  ]]; then
+      rm "${src}.gpg"
+    fi
+  fi
+  gpg -c --no-symkey-cache --cipher-algo "${algorithm}" ${passphrase_arg} ${output:+-o "${output}.gpg" } "${src}"
+  if [[ "${multi}" == true ]]; then
+    rm "${output}"
+  fi
+  if [[ "${delete_originals}" == true ]]; then
+    for original in "${input[@]}"; do
+      rm -r "${original}"
+    done
+  fi
+}
+
+function _decrypt {
+  for input in "$@"; do
+    local output="${input%.gpg}"
+    gpg -d -o "${output}" "${input}"
+    if [[ "${output}" == *.multi ]]; then
+      tar xf "${output}"
+      rm "${output}"
+    fi
+  done
+}

@@ -20,3 +20,10 @@ fresh altercation/solarized "apple-colorpalette-solarized/solarized.clr" --file=
 # Install Swiftenv
 #------------------------------------------------------------------------------
 fresh kylef/swiftenv . --file="~/.swiftenv/"
+
+################################################################################
+# Config Files
+################################################################################
+
+# SSH
+fresh Darwin/other/ssh.config --file="$HOME/.ssh/config"

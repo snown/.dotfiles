@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+source "${FRESH_LOCAL:-${HOME}/.dotfiles}/utilities"
+
+function passwd_prompt {
+  local _password _verification
+  local match=false
+  
+  stty -echo
+  while [[ "${match}" == false ]]; do
+    printf "Secrets Password: "
+    read _password
+    printf "Verify Password: "
+    read _verification
+    if [[ "${_password}" == "${_verification}" ]]; then
+      match=true
+    fi
+  done
+  stty echo
+  
+  echo "${_password}"
+  unset _password
+  unset _verification
+}
+
+
+function fresh-push {
+  local push_git=true
+  local create_secrets=true
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+    --no-push)
+      push_git=false
+      ;;
+    --no-secrets)
+      create_secrets=false
+      ;;
+    esac
+    shift
+  done
+  
+  pushd "${FRESH_LOCAL}" >/dev/null
+  if [[ "${create_secrets}" == true ]]; then
+    local secret_dirs=()
+    local _password
+    while IFS=  read -r -d $'\0'; do
+        secret_dirs+=("$REPLY")
+    done < <(find . -mindepth 2 -maxdepth 2 -name "secrets" -type d -print0)
+  
+    if [[ ${#secret_dirs[@]} -gt 0 ]]; then
+      local _verification
+      local _match=false
+
+      stty -echo
+      while [[ "${_match}" == false ]]; do
+        printf "Secrets Password: "
+        read _password
+        printf "\nVerify Password: "
+        read _verification
+        if [[ "${_password}" == "${_verification}" ]]; then
+          _match=true
+        fi
+        unset _verification
+      done
+      stty echo
+      printf "\n"
+    fi
+  
+    for secret_dir in "${secret_dirs[@]}"; do
+      pushd "$(dirname "${secret_dir}")" >/dev/null
+      _encrypt --passphrase-stdin --force "$(basename "${secret_dir}")" <<< "${_password}"
+      popd >/dev/null
+    
+      git add "${secret_dir}.multi.gpg"
+    done
+  fi
+  
+  if [[ "${push_git}" == true ]]; then
+    git commit
+    git push
+  fi
+  popd >/dev/null
+}
+
+if [ "$BASH_SOURCE" == "$0" ]; then
+  fresh-push
+fi

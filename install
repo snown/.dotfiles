@@ -14,7 +14,7 @@ export FRESH_BASH_COMPS_PATH=${FRESH_BASH_COMPS_PATH:-${HOME}/.etc/bash_completi
 CONTEXTS=( "All" "$(uname)" "Local" )
 
 ################################################################################
-# Install Fresh if needed                                                      #
+# Install Fresh if needed
 ################################################################################
 
 if ! [ hash fresh 2> /dev/null ] && ! [ -e $HOME/.fresh/source/freshshell/fresh ]; then
@@ -23,8 +23,10 @@ if ! [ hash fresh 2> /dev/null ] && ! [ -e $HOME/.fresh/source/freshshell/fresh 
 fi
 
 ################################################################################
-# Functions                                                                    #
+# Functions
 ################################################################################
+
+source "${SCRIPT_DIR}/utilities"
 
 function combinePaths () {
   local count=1
@@ -55,9 +57,14 @@ function combinePaths () {
 #------------------------------------------------------------------------------
 function fresh_before_build () {
   for context in "${CONTEXTS[@]}"; do
-	if [ -r "${FRESH_LOCAL}/${context}/fresh_before_build" ]; then
-      source "${FRESH_LOCAL}/${context}/fresh_before_build"
-	fi
+    if [[ -r "${FRESH_LOCAL}/${context}/secrets.multi.gpg" ]]; then
+      pushd "${FRESH_LOCAL}/${context}" >/dev/null
+      _decrypt "./secrets.multi.gpg"
+      popd >/dev/null
+    fi
+  	if [ -r "${FRESH_LOCAL}/${context}/fresh_before_build" ]; then
+        source "${FRESH_LOCAL}/${context}/fresh_before_build"
+  	fi
   done
 }
 
@@ -153,19 +160,34 @@ cat >> "$HOME/.freshrc" <<-'CONTEXT_FRESH_COMMANDS'
 if [ -r "${CONTEXT_FULL_DIR}/freshrc" ]; then
   source "${CONTEXT_FULL_DIR}/freshrc"
 fi
+if [ -r "${CONTEXT_FULL_DIR}/secrets/freshrc" ]; then
+  source "${CONTEXT_FULL_DIR}/secrets/freshrc"
+fi
 
 if [ -d "$CONTEXT_FULL_DIR/bin" ]; then
   fresh "$(combinePaths ${CONTEXT_DIR} "bin")/*" --bin
 fi
+if [ -d "$CONTEXT_FULL_DIR/secrets/bin" ]; then
+  fresh "$(combinePaths ${CONTEXT_DIR} "secrets" "bin")/*" --bin
+fi
 
 if [ -d "$CONTEXT_FULL_DIR/config_files" ]; then
   fresh "$(combinePaths ${CONTEXT_DIR} "config_files")/*" --file
+fi
+if [ -d "$CONTEXT_FULL_DIR/secrets/config_files" ]; then
+  fresh "$(combinePaths ${CONTEXT_DIR} "secrets" "config_files")/*" --file
 fi
 
 if [ -d "$CONTEXT_FULL_DIR/aliases" ]; then
   ALIAS_PATH="$(combinePaths "${CONTEXT_FULL_DIR}" "aliases/*")"
   for f in $ALIAS_PATH; do
     fresh "$(combinePaths ${CONTEXT_DIR} "aliases" $(basename $f))" --file="$HOME/.aliases/$(basename $f)"
+  done
+fi
+if [ -d "$CONTEXT_FULL_DIR/secrets/aliases" ]; then
+  ALIAS_PATH="$(combinePaths "${CONTEXT_FULL_DIR}" "secrets" "aliases/*")"
+  for f in $ALIAS_PATH; do
+    fresh "$(combinePaths ${CONTEXT_DIR} "secrets" "aliases" $(basename $f))" --file="$HOME/.aliases/$(basename $f)"
   done
 fi
 
@@ -175,10 +197,21 @@ if [ -d "${CONTEXT_FULL_DIR}/run_commands" ]; then
     fresh "$(combinePaths ${CONTEXT_DIR} "run_commands/$(basename "$run_command")")"
   done
 fi
+if [ -d "${CONTEXT_FULL_DIR}/secrets/run_commands" ]; then
+  declare -a RUN_COMMANDS=$(getFileElementsInOrder "$(combinePaths ${CONTEXT_FULL_DIR} "secrets" "run_commands")/*")
+  for run_command in "${RUN_COMMANDS[@]}"; do
+    fresh "$(combinePaths ${CONTEXT_DIR} "secrets" "run_commands/$(basename "$run_command")")"
+  done
+fi
 
 if [ -d "${CONTEXT_FULL_DIR}/bash_completions" ]; then
   for completion_file in "${CONTEXT_FULL_DIR}/bash_completions"/*; do
     fresh "$(combinePaths "${CONTEXT_DIR}" "bash_completions" "$(basename "${completion_file}")")" --file="\${FRESH_BASH_COMPS_PATH}/$(basename "${completion_file}")"
+  done 
+fi
+if [ -d "${CONTEXT_FULL_DIR}/secrets/bash_completions" ]; then
+  for completion_file in "${CONTEXT_FULL_DIR}/secrets/bash_completions"/*; do
+    fresh "$(combinePaths "${CONTEXT_DIR}" "secrets" "bash_completions" "$(basename "${completion_file}")")" --file="\${FRESH_BASH_COMPS_PATH}/$(basename "${completion_file}")"
   done 
 fi
 
@@ -188,8 +221,15 @@ CONTEXT_FRESH_COMMANDS
 }
 
 ################################################################################
-# Construct the `freshrc` file                                                 #
+# Construct the `freshrc` file
 ################################################################################
+
+cat > "${FRESH_LOCAL}/.env" <<-ENVFILE
+export FRESH_LOCAL=${FRESH_LOCAL}
+export FRESH_BIN_PATH=${FRESH_BIN_PATH}
+export FRESH_BASH_COMPS_PATH=${FRESH_BASH_COMPS_PATH}
+ENVFILE
+
 cat > "$HOME/.freshrc" <<-EOD
 
 export FRESH_LOCAL=${FRESH_LOCAL}
@@ -197,6 +237,8 @@ export FRESH_BIN_PATH=${FRESH_BIN_PATH}
 export FRESH_BASH_COMPS_PATH=${FRESH_BASH_COMPS_PATH}
 
 CONTEXTS=( "All" "\$(uname)" "Local" )
+
+fresh .env --ignore-missing
 
 fresh .pre-shell-sh --ignore-missing
 
@@ -214,6 +256,8 @@ $(declare -f elementsFromFile)
 
 $(declare -f getFileElementsInOrder)
 
+$(declare -f _decrypt)
+
 fresh_before_build
 
 EOD
@@ -224,7 +268,7 @@ for context in "${CONTEXTS[@]}"; do
 done
 
 ################################################################################
-# Construct the end of the `shell.sh` file                                     #
+# Construct the end of the `shell.sh` file
 ################################################################################
 
 mkdir -p "$HOME/.local/bin"
@@ -236,7 +280,7 @@ fresh .post-shell-sh --ignore-missing
 POST_SHELL_SH
 
 ################################################################################
-# Run the Fresh command                                                        #
+# Run the Fresh command
 ################################################################################
 
 $HOME/.fresh/source/freshshell/fresh/bin/fresh

@@ -1,6 +1,5 @@
 [core]
 	excludesfile = /Users/lholmes/.gitignore_global
-	editor = mate
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
