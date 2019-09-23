@@ -44,7 +44,7 @@ brews=(
 	findutils
 	spoof-mac
 	macosvpn
-	hh
+	hstr
 	neovim
 	fontforge
 	tor
@@ -98,6 +98,7 @@ casks=(
 	webstorm-eap
 	xquartz
   provisionql
+  zxpinstaller
 )
 brew cask install ${casks[@]}
 

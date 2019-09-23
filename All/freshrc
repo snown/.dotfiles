@@ -31,6 +31,9 @@ if [[ -z "$(complete docker-compose)" ]]; then
   fresh docker/compose contrib/completion/bash/docker-compose --file="${FRESH_BASH_COMPS_PATH}/docker-compose"
 fi
 
+## Create test file heirarchies
+fresh LLNL/fdtree fdtree.bash --bin="${FRESH_BIN_PATH}/fdtree"
+
 ################################################################################
 # Config Files                                                                 #
 ################################################################################
