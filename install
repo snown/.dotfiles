@@ -215,6 +215,13 @@ if [ -d "${CONTEXT_FULL_DIR}/secrets/bash_completions" ]; then
   done 
 fi
 
+if [ -d "${CONTEXT_FULL_DIR}/secrets/sshkeys" ]; then
+  for sshkey in "${CONTEXT_FULL_DIR}/secrets/sshkeys"/*; do
+    fresh "$(combinePaths "${CONTEXT_DIR}" "secrets" "sshkeys" "$(basename "${sshkey}")")" --file="${HOME}/.ssh/$(basename "${sshkey}")"
+  done
+  echo "Copied ssh keys, you may need to symbolic link one of them to: ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub"
+fi
+
 CONTEXT_FRESH_COMMANDS
 
   unsetContext
