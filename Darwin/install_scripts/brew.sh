@@ -30,24 +30,36 @@ done
 echo "Pouring brews..."
 brews=(
 	bash
+  brew-cask-completion
+	"coreutils --with-gmp"
+  ddrescue
+  docker-completion
+  docker-compose-completion
+	findutils
+	fontforge
+  gawk
+  gem-completion
+	macosvpn
+	mas
+	multimarkdown
+	neovim
+  nmap
+	objc-run
+  pacapt
+  rake-completion
 	"ruby --with-doc"
+  ruby-completion
+	spoof-mac
 	ssh-copy-id
 	the_silver_searcher
-	"wget --with-pcre"
-	multimarkdown
-	objc-run
-	xcproj
-	unrar
-	mas
-	"git --with-pcre"
-	"coreutils --with-gmp"
-	findutils
-	spoof-mac
-	macosvpn
-	hstr
-	neovim
-	fontforge
 	tor
+	unrar
+  vagrant-completion
+  webp
+	"wget --with-pcre"
+	xcproj
+	"git --with-pcre"
+	hstr
 	gibo
   gnu-sed
 
@@ -77,12 +89,16 @@ casks=(
 	google-chrome
 	gpgtools
 	hockey
+  hermes
 	inkscape
+  intellij-idea-ce
 	keka
 	lingon-x
-	macid
+	#macid
 	moom
 	mplayerx
+  postman
+  provisionql
 	resilio-sync
 	sequel-pro
 	slack
@@ -96,8 +112,8 @@ casks=(
 	unrarx
 	virtualbox
 	webstorm-eap
+  wine-stable
 	xquartz
-  provisionql
   zxpinstaller
 )
 brew cask install ${casks[@]}
