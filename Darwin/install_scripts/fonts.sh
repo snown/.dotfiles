@@ -24,7 +24,7 @@ fonts=(
   roboto
 	fontawesome
 	consolas-for-powerline
-	droid-sans
+	droidsansmono-nerd-font
 	menlo-for-powerline
   fantasque-sans-mono
   monoisome
