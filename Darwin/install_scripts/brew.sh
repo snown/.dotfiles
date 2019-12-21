@@ -58,7 +58,6 @@ brews=(
   webp
   wget
 	xcproj
-	"git --with-pcre"
 	hstr
 	gibo
   gnu-sed
