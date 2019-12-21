@@ -14,5 +14,5 @@ macapps=(
   924726344 # Deliveries
 	497799835 # Xcode
 )
-mas signin --dialog snown27@gmail.com
+#mas signin --dialog snown27@gmail.com
 screen -S mas -dm mas install ${macapps[@]}
