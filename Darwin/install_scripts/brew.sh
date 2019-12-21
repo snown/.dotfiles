@@ -18,8 +18,8 @@ brew upgrade
 echo "Tapping kegs..."
 kegs=(
 	"thoughtbot/formulae"
-	"caskroom/versions"
-	"caskroom/fonts"
+	"homebrew/cask-versions"
+	"homebrew/cask-fonts"
 	"neovim/neovim"
 )
 for keg in ${kegs[@]}; do
@@ -31,7 +31,7 @@ echo "Pouring brews..."
 brews=(
 	bash
   brew-cask-completion
-	"coreutils --with-gmp"
+	coreutils
   ddrescue
   docker-completion
   docker-compose-completion
