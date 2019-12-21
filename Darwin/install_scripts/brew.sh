@@ -47,7 +47,7 @@ brews=(
 	objc-run
   pacapt
   rake-completion
-	"ruby --with-doc"
+	ruby
   ruby-completion
 	spoof-mac
 	ssh-copy-id
@@ -80,7 +80,7 @@ casks=(
 	atom
 	cakebrew
 	colorpicker-developer
-	colorpicker-hex
+	#colorpicker-hex
   colorpicker-skalacolor
 	docker
 	dropbox
@@ -123,5 +123,5 @@ echo "Performing brew cleanup..."
 brew cleanup
 
 # Link .app files into /Applications
-echo "Linking up Cask Apps..."
-brew linkapps
+#echo "Linking up Cask Apps..."
+#brew linkapps
