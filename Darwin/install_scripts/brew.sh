@@ -66,7 +66,9 @@ brews=(
 	# Commenting Node out right now because there is a better way to do it with version switching
 	#node
 )
-brew install ${brews[@]}
+for brewname in "${brews[@]}"; do
+  brew install ${brewname}
+done
 
 # Add newly installed GNU `find` in PATH as `find`
 ln -sf /usr/local/bin/gfind "${FRESH_BIN_PATH:-$HOME/.bin}/find"
@@ -103,7 +105,7 @@ casks=(
 	sourcetree
 	textmate
 	the-unarchiver
-	torbrowser
+	tor-browser
 	tower
 	trim-enabler
 	unrarx
@@ -112,7 +114,9 @@ casks=(
   wine-stable
 	xquartz
 )
-brew cask install ${casks[@]}
+for caskname in "${casks[@]}"; do
+  brew cask install ${caskname}
+done
 
 # Remove outdated versions from the Cellar
 echo "Performing brew cleanup..."
