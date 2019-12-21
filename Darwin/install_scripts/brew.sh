@@ -57,7 +57,6 @@ brews=(
   vagrant-completion
   webp
   wget
-	#"wget --with-pcre"
 	xcproj
 	"git --with-pcre"
 	hstr
@@ -81,7 +80,6 @@ casks=(
 	atom
 	cakebrew
 	colorpicker-developer
-	#colorpicker-hex
   colorpicker-skalacolor
 	docker
 	dropbox
@@ -95,7 +93,6 @@ casks=(
   intellij-idea-ce
 	keka
 	lingon-x
-	#macid
 	moom
 	mplayerx
   postman
@@ -104,7 +101,6 @@ casks=(
 	sequel-pro
 	slack
 	sourcetree
-	sqlitebrowser
 	textmate
 	the-unarchiver
 	torbrowser
@@ -115,7 +111,6 @@ casks=(
 	webstorm-eap
   wine-stable
 	xquartz
-  zxpinstaller
 )
 brew cask install ${casks[@]}
 
