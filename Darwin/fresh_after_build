@@ -22,7 +22,9 @@ defaults write com.apple.dt.xcode XCFontAndColorCurrentTheme -string "Solarized 
 ################################################################################
 # Update NeoVIM with python engine
 ################################################################################
-pip2 install neovim --upgrade
+if [[ -x "$(command -v pip2)" ]]; then
+  pip2 install neovim --upgrade
+fi
 pip3 install neovim --upgrade
 
 ################################################################################
