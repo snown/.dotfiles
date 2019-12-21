@@ -56,7 +56,8 @@ brews=(
 	unrar
   vagrant-completion
   webp
-	"wget --with-pcre"
+  wget
+	#"wget --with-pcre"
 	xcproj
 	"git --with-pcre"
 	hstr
@@ -87,7 +88,7 @@ casks=(
 	fastlane
 	fontforge
 	google-chrome
-	gpgtools
+	gpg-suite
 	hockey
   hermes
 	inkscape
