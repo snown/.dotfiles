@@ -39,6 +39,7 @@ brews=(
 	fontforge
   gawk
   gem-completion
+  git-lfs
 	macosvpn
 	mas
 	multimarkdown
@@ -82,6 +83,7 @@ casks=(
 	cakebrew
 	colorpicker-developer
   colorpicker-skalacolor
+  discord
 	docker
 	dropbox
 	fastlane
@@ -93,6 +95,7 @@ casks=(
 	inkscape
   intellij-idea-ce
 	keka
+  keybase
 	lingon-x
 	moom
 	mplayerx
