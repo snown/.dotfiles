@@ -58,6 +58,7 @@ function combinePaths () {
 function fresh_before_build () {
   for context in "${CONTEXTS[@]}"; do
     if [[ -r "${FRESH_LOCAL}/${context}/secrets.multi.gpg" ]]; then
+  		echo "Decrypting ${context} secrets..."
       pushd "${FRESH_LOCAL}/${context}" >/dev/null
       _decrypt "./secrets.multi.gpg"
       popd >/dev/null

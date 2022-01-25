@@ -1,6 +1,14 @@
+# Use HH as history
 
-# add this configuration to ~/.zshrc
 export HISTFILE=~/.zsh_history  # ensure history file visibility
 export HH_CONFIG=hicolor        # get more colors
 bindkey -s "\C-r" "\eqhh\n"     # bind hh to Ctrl-r (for Vi mode check doc)
 
+# Case-insensitive tab completion
+# from https://superuser.com/a/1092328
+
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# Use next line instead if you want to fall back on case-insensitivity only if exact match wasn't found
+#zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
+
+autoload -Uz compinit && compinit

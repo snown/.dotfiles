@@ -144,7 +144,7 @@ function _encrypt {
 function _decrypt {
   for input in "$@"; do
     local output="${input%.gpg}"
-    gpg -d -o "${output}" "${input}"
+    gpg --pinentry loopback -d -o "${output}" "${input}"
     if [[ "${output}" == *.multi ]]; then
       tar xf "${output}"
       rm "${output}"
